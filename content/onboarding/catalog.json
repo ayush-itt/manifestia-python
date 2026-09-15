@@ -1,0 +1,24 @@
+{
+  "voices": [
+    { "id": "aria", "label": "Aria — calm, warm", "edge_voice": "en-US-AriaNeural" },
+    { "id": "hannah", "label": "Hannah — soft, grounded", "edge_voice": "en-US-JennyNeural" },
+    { "id": "autumn", "label": "Autumn — intimate, reflective", "edge_voice": "en-US-AriaNeural" },
+    { "id": "troy", "label": "Troy — steady, low", "edge_voice": "en-US-GuyNeural" }
+  ],
+  "life_areas": [
+    { "id": "career", "label": "Career & craft" },
+    { "id": "wealth", "label": "Money & freedom" },
+    { "id": "relationships", "label": "Love & family" },
+    { "id": "health", "label": "Body & energy" },
+    { "id": "identity", "label": "Self-worth & identity" },
+    { "id": "creativity", "label": "Creativity & expression" }
+  ],
+  "chips_for_selected_areas": {
+    "career": ["Building a brand", "Finishing what I start", "Being taken seriously", "Leaving a job that shrinks me"],
+    "wealth": ["Earning without burnout", "Owning my time", "Quiet financial safety", "Paying myself first"],
+    "relationships": ["Being present with family", "Partnership without shrinking", "Feeling seen", "Keeping closeness while I grow"],
+    "health": ["Calm mornings", "Energy that lasts", "Sleep I can trust", "A body I treat kindly"],
+    "identity": ["Keeping promises to myself", "Not performing for belonging", "Becoming her now", "Self-trust"],
+    "creativity": ["Making things that help people", "Showing unfinished work", "Craft over hustle", "A studio of my own"]
+  }
+}

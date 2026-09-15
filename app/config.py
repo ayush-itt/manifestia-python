@@ -1,0 +1,133 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+DEFAULT_BYTEPLUS_VIDEO_MODEL = "dreamina-seedance-2-0-260128"
+DEFAULT_MODELARK_BASE_URL = "https://ark.ap-southeast.bytepluses.com/api/v3"
+
+BACKEND_ROOT = Path(__file__).resolve().parent.parent
+POC_ROOT = BACKEND_ROOT
+CONTENT_DIR = BACKEND_ROOT / "content"
+
+MEDIA_URL_PREFIX = "/media"
+MUSIC_URL_PREFIX = "/media/library-music"
+
+
+def _resolve_path(raw: str | None, fallback: Path) -> Path:
+    if raw and raw.strip():
+        return Path(raw.strip()).expanduser().resolve()
+    return fallback.resolve()
+
+
+def _resolve_story_path(story_path: str, templates_dir: str) -> Path:
+    explicit = story_path.strip()
+    if explicit:
+        return Path(explicit).expanduser().resolve()
+    templates = templates_dir.strip()
+    if templates:
+        path = Path(templates).expanduser().resolve()
+        if path.suffix.lower() == ".json":
+            return path
+        return (path / "story.json").resolve()
+    return (CONTENT_DIR / "story" / "story.json").resolve()
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=str(BACKEND_ROOT / ".env"),
+        env_file_encoding="utf-8",
+        extra="ignore",
+        case_sensitive=False,
+    )
+
+    port: int = 4100
+    node_env: str = "development"
+    cors_origin: str = "http://localhost:5173"
+    database_path: str = ""
+    storage_root: str = ""
+    pexels_api_key: str = ""
+    pixabay_api_key: str = ""
+    unsplash_access_key: str = ""
+    coverr_api_key: str = ""
+    nasa_api_key: str = ""
+    byteplus_api_key: str = ""
+    byteplus_api_url: str = DEFAULT_MODELARK_BASE_URL
+    byteplus_video_model: str = DEFAULT_BYTEPLUS_VIDEO_MODEL
+    public_api_url: str = "http://localhost:4100"
+    story_path: str = ""
+    story_templates_dir: str = ""
+    story_assets_dir: str = ""
+    background_music_dir: str = ""
+    onboarding_questions_path: str = ""
+    onboarding_catalog_path: str = ""
+    video_ratio: str = "9:16"
+    video_width: int = 720
+    video_height: int = 1280
+    video_fps: int = 24
+    scene_duration_sec: float = 10
+    narration_delay_sec: float = 2
+    tts_voice: str = "en-US-AriaNeural"
+
+    def resolved_database_path(self) -> Path:
+        if self.database_path.strip():
+            return Path(self.database_path).expanduser().resolve()
+        return (BACKEND_ROOT / "storage" / "manifestia.db").resolve()
+
+    def resolved_storage_root(self) -> Path:
+        if self.storage_root.strip():
+            return Path(self.storage_root).expanduser().resolve()
+        return (BACKEND_ROOT / "storage").resolve()
+
+    def resolved_story_path(self) -> Path:
+        return _resolve_story_path(self.story_path, self.story_templates_dir)
+
+    def resolved_story_assets_dir(self) -> Path:
+        return _resolve_path(self.story_assets_dir, CONTENT_DIR / "story")
+
+    def resolved_background_music_dir(self) -> Path:
+        return _resolve_path(self.background_music_dir, CONTENT_DIR / "background-music")
+
+    def resolved_onboarding_questions_path(self) -> Path:
+        return _resolve_path(self.onboarding_questions_path, CONTENT_DIR / "onboarding" / "questions.json")
+
+    def resolved_onboarding_catalog_path(self) -> Path:
+        return _resolve_path(self.onboarding_catalog_path, CONTENT_DIR / "onboarding" / "catalog.json")
+
+
+_raw = Settings()
+
+
+class Config:
+    port: int = _raw.port
+    cors_origin: str = _raw.cors_origin
+    database_path: Path = _raw.resolved_database_path()
+    storage_root: Path = _raw.resolved_storage_root()
+    pexels_api_key: str = _raw.pexels_api_key
+    pixabay_api_key: str = _raw.pixabay_api_key
+    unsplash_access_key: str = _raw.unsplash_access_key
+    coverr_api_key: str = _raw.coverr_api_key
+    nasa_api_key: str = _raw.nasa_api_key
+    byteplus_api_key: str = _raw.byteplus_api_key
+    byteplus_api_url: str = _raw.byteplus_api_url.strip() or DEFAULT_MODELARK_BASE_URL
+    byteplus_video_model: str = _raw.byteplus_video_model.strip() or DEFAULT_BYTEPLUS_VIDEO_MODEL
+    public_api_url: str = _raw.public_api_url.strip() or "http://localhost:4100"
+    content_dir: Path = CONTENT_DIR
+    story_path: Path = _raw.resolved_story_path()
+    story_assets_dir: Path = _raw.resolved_story_assets_dir()
+    background_music_dir: Path = _raw.resolved_background_music_dir()
+    onboarding_questions_path: Path = _raw.resolved_onboarding_questions_path()
+    onboarding_catalog_path: Path = _raw.resolved_onboarding_catalog_path()
+    video_ratio: str = _raw.video_ratio if _raw.video_ratio in ("9:16", "16:9") else "9:16"
+    video_width: int = _raw.video_width
+    video_height: int = _raw.video_height
+    video_fps: int = _raw.video_fps
+    scene_duration_sec: float = _raw.scene_duration_sec
+    narration_delay_sec: float = _raw.narration_delay_sec
+    default_edge_voice: str = _raw.tts_voice.strip() or "en-US-AriaNeural"
+    poc_root: Path = POC_ROOT
+    backend_root: Path = BACKEND_ROOT
+
+
+config = Config()

@@ -1,0 +1,180 @@
+{
+  "id": "clothing-brand-identity-reel",
+  "title": "The Woman I Am Becoming",
+  "aspectRatio": "9:16",
+  "totalDuration": 60,
+  "sceneDuration": 10,
+  "sceneCount": 6,
+  "mood": "hopeful",
+  "tags": [
+    "inspiring",
+    "calm",
+    "hopeful",
+    "confident",
+    "introspective",
+    "cinematic",
+    "uplifting",
+    "emotional",
+    "reflective",
+    "peaceful"
+  ],
+  "script": "I finish what I start. I trust myself to build what matters, one intentional day at a time. I am building something meaningful. My ideas become real because I keep showing up and finishing the work. I create for women who want to feel seen, confident, and completely themselves. I am consistent. I complete what I begin. My success gives me freedom, not distance. I am the woman who keeps her word to herself.",
+  "scenes": [
+    {
+      "sceneId": 1,
+      "title": "THE WOMAN I AM BECOMING",
+      "timecode": "00:00-00:10",
+      "duration": 10,
+      "voiceover": "I finish what I start. I trust myself to build what matters, one intentional day at a time.",
+      "prompt": "SCENE CONTEXT:\nEarly morning in a beautiful, quiet modern apartment. The woman wakes naturally, feeling light, calm, and energized rather than rushed. She sits near a large window with soft morning light, opens a simple notebook, writes one clear intention for the day, then looks at a single handwritten line describing the woman she is becoming. The scene establishes her new identity: calm, intentional, disciplined, and someone who finishes what she starts. The emotional beat is quiet certainty rather than ambition or urgency.\n\nACTIVE REFERENCES:\n- `[@SUBJECT_NAME]` — 100% matched to reference image `[SUBJECT_REFERENCE_IMAGE]`. Wardrobe locked strictly to elegant relaxed morning clothing in neutral warm tones: cream cotton top, soft beige trousers, minimal gold accessories. Facial features, hair/beard style, age, and accessories locked to reference image.\n- `[@MORNING_HOME]` — STYLE REFERENCE ONLY, not a fixed keyframe. Modern warm contemporary Indian home interior with natural wood, cream walls, subtle handcrafted details, large window, minimal luxury styling.\n\nLOCATION MAP:\n- `[@MORNING_HOME]` — STYLE REFERENCE ONLY, not a fixed keyframe.\n  - Foreground: Wooden writing desk with an open cream notebook, elegant pen, ceramic cup, subtle indoor plant leaves softly framing the lower edge of frame.\n  - Midground: `[@SUBJECT_NAME]` seated at the desk near the window, torso turned slightly toward the natural light, notebook directly in front of her.\n  - Background: Softly blurred contemporary apartment interior, warm wood textures, linen curtains moving slightly from a gentle breeze, distant city skyline washed in morning haze.\n\nFIRST FRAME / BLOCKING:\nVertical 9:16 composition. At t=0, `[@SUBJECT_NAME]` is already seated at the desk, shown in a medium-wide three-quarter profile from slightly behind and to her left. Her shoulders are relaxed, posture upright but natural. Her closed notebook sits directly in front of her and the first visual focal point is the warm morning light falling across the desk and the side of her face. She slowly opens the notebook before any other major movement begins.\n\nFORMAT MODE:\nOne continuous 10-second shot — no internal edits, jump cuts, or scene transitions.\n\nOPTICS:\n9:16 vertical, 50mm full-frame prime lens, shallow cinematic depth of field with natural skin separation, soft bokeh, subtle organic lens bloom around the window light, restrained natural motion blur.\n\nCAMERA:\nSlow controlled dolly-in from a medium-wide framing toward a medium close-up. Camera moves approximately one meter forward over the 10 seconds with extremely subtle operator micro-drift, no abrupt movement, no artificial stabilization look.\n\nACTION:\n`[@SUBJECT_NAME]` opens the notebook from 0–2 seconds, places one hand gently on the page from 2–3 seconds, writes one deliberate line from 3–6 seconds, pauses from 6–7 seconds, then reads the line silently from 7–8.5 seconds. From 8.5–10 seconds she closes the notebook halfway, lifts her gaze toward the morning light, and takes one calm, grounded breath. Her physical movement communicates certainty and completion rather than hesitation. Camera tracks simultaneously as described in CAMERA.\n\nPERFORMANCE:\nSubtle half-smile developing naturally, relaxed jaw, soft eyes, steady breathing, small upward movement of the chest with the inhale, focused gaze on the page, then quiet confidence when looking toward the light. No exaggerated motivational expression. Natural skin texture, realistic eye reflections and catch-lights, emotionally grounded micro-expression.\n\nPHYSICS:\nNotebook pages move naturally when opened. Loose fabric responds subtly to her arm movement. Curtains move softly from natural airflow. Pen has realistic weight and contact with paper. Her body weight remains naturally grounded in the chair.\n\nLIGHTING:\nSoft golden morning key light entering from camera-right through a large window, approximately 4200K to 4600K. Gentle neutral fill from the room, subtle warm rim around hair and shoulders. Natural soft shadows with no crushed blacks.\n\nCOLOR GRADE:\nWarm ivory, cream, beige, soft walnut wood, muted sage accents. Very subtle golden highlights around window light, approximately `#F5D6A3`. Soft shadow contrast, luminous but restrained, premium lifestyle-cinema look.\n\nAUDIO:\nNO BACKGROUND MUSIC.\n\n- SFX: Quiet morning room tone, faint distant city ambience, soft notebook page movement, pen touching paper, subtle fabric movement, gentle breath.\n- Voiceover: *(00:03 – 00:10)* \"I finish what I start. I trust myself to build what matters, one intentional day at a time.\"\n\nSTYLE:\n8K cinema master quality, photorealistic grain profile, true-to-life optics, zero game-engine look, zero artificial skin smoothing.\n\nOUTPUT SETTINGS & POSITIVE LOCKS:\n- Aspect Ratio: 9:16 (Vertical Mobile Ratio).\n- Duration: 10 seconds.\n- Positive Locks: Unbroken 10s shot. `[@SUBJECT_NAME]` identity and wardrobe locked strictly to input reference image `[SUBJECT_REFERENCE_IMAGE]`. Calm morning energy, believable human motion, premium contemporary Indian home aesthetic, no text generated inside the environment, no exaggerated smile, no rushed gestures.",
+      "stockQuery": "woman writing notebook morning window golden light apartment",
+      "referenceImages": [
+        {
+          "file": "images/subject_reference.jpg",
+          "role": "subject_identity",
+          "promptLabel": "[@SUBJECT_NAME]"
+        },
+        {
+          "file": "images/morning_home.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@MORNING_HOME]"
+        }
+      ]
+    },
+    {
+      "sceneId": 2,
+      "title": "I CREATE SOMETHING THAT HELPS WOMEN FEEL SEEN",
+      "timecode": "00:10-00:20",
+      "duration": 10,
+      "voiceover": "I am building something meaningful. My ideas become real because I keep showing up and finishing the work.",
+      "prompt": "SCENE CONTEXT:\nA refined design studio where the woman is actively building her clothing brand. She studies richly textured Indian fabrics, compares two garment sketches, then places a completed design sheet beside the fabric with a satisfied, focused expression. The scene transforms her aspiration into tangible creation. She is not dreaming about a business anymore; she is visibly working on one with clarity, consistency, and confidence.\n\nACTIVE REFERENCES:\n- `[@SUBJECT_NAME]` — 100% matched to reference image `[SUBJECT_REFERENCE_IMAGE]`. Wardrobe locked strictly to sophisticated founder attire: ivory blouse, tailored dark trousers, minimal gold jewelry, clean polished styling. Facial features, hair/beard style, age, and accessories locked to reference image.\n- `[@DESIGN_STUDIO]` — STYLE REFERENCE ONLY, not a fixed keyframe. Premium contemporary fashion studio with Indian textile influences, natural wood worktable, fabric swatches, design sketches, muted neutral palette.\n- `[@TEXTILE_REFERENCE]` — STYLE REFERENCE ONLY. Reference imagery for premium Indian fabrics with refined texture, subtle embroidery, sophisticated colors, no excessive traditional ornamentation.\n\nLOCATION MAP:\n- `[@DESIGN_STUDIO]` — STYLE REFERENCE ONLY, not a fixed keyframe.\n  - Foreground: Layered fabric samples, sketchbook, fashion pencil, measuring tape, partially visible garment pattern pieces.\n  - Midground: `[@SUBJECT_NAME]` standing at the studio table, centered slightly right of frame, actively arranging fabric against a design sketch.\n  - Background: Tall shelving with carefully folded textiles, mood boards, sewing details, softly illuminated work area with sophisticated editorial styling.\n\nFIRST FRAME / BLOCKING:\nAt t=0, vertical 9:16. `[@SUBJECT_NAME]` stands at a large wooden design table in side profile, gently touching a folded fabric sample with her left hand while studying a sketch placed directly in front of her. A second fabric lies diagonally across the table. Her body is still and focused before the movement begins.\n\nFORMAT MODE:\nOne continuous 10-second shot — no internal edits, jump cuts, or scene transitions.\n\nOPTICS:\n9:16, 35mm prime lens, moderately shallow depth of field, crisp foreground textile detail with cinematic background falloff, subtle natural lens flare from studio window reflections.\n\nCAMERA:\nSlow lateral tracking movement from left to right combined with a gentle push-in, revealing more of the design table and gradually moving closer to her hands and expression.\n\nACTION:\nFrom 0–2 seconds, she studies the existing sketch. From 2–4 seconds she lifts one fabric sample and places it beside the drawing. From 4–6 seconds she compares the colors and texture, then uses her pencil to make one confident adjustment to the design from 6–8 seconds. From 8–10 seconds she places the pencil down, gently smooths the fabric with her hand, and gives one subtle satisfied nod.\n\nPERFORMANCE:\nDeep concentration without tension. Focused eyes, slight narrowing of the brow when evaluating the design, then a small release of tension and quiet satisfaction after completing the adjustment. Her expression communicates competence and personal ownership, not insecurity.\n\nPHYSICS:\nFabric folds realistically, with believable weight, friction, and soft compression under her hands. Pencil movement follows natural hand mechanics. Paper remains flat against the wooden table. No floating objects or unnatural textile movement.\n\nLIGHTING:\nLarge soft daylight key from camera-left, approximately 5000K, with warm practical fill from the studio interior around 3200K. Subtle rim light on hair and shoulders. Controlled shadows beneath hands and fabric.\n\nCOLOR GRADE:\nIvory, warm taupe, muted terracotta, deep olive, charcoal, natural wood tones. Highlight accent around `#C98A63`. Soft cinematic contrast with tactile textile richness.\n\nAUDIO:\nNO BACKGROUND MUSIC.\n\n- SFX: Soft fabric movement, pencil on paper, subtle room tone, distant sewing-machine ambience, gentle paper contact sounds.\n- Voiceover: *(00:10 – 00:20)* \"I am building something meaningful. My ideas become real because I keep showing up and finishing the work.\"\n\nSTYLE:\n8K cinema master quality, photorealistic grain profile, true-to-life optics, zero game-engine look, zero artificial skin smoothing.\n\nOUTPUT SETTINGS & POSITIVE LOCKS:\n- Aspect Ratio: 9:16 (Vertical Mobile Ratio).\n- Duration: 10 seconds.\n- Positive Locks: Unbroken 10s shot. `[@SUBJECT_NAME]` identity and wardrobe locked strictly to input reference image `[SUBJECT_REFERENCE_IMAGE]`. Premium founder aesthetic, authentic Indian textile details, realistic hands, fabric physics, no generic fashion-commercial posing, no excessive luxury signaling.",
+      "stockQuery": "fashion designer fabric studio table sketches textiles",
+      "referenceImages": [
+        {
+          "file": "images/subject_reference.jpg",
+          "role": "subject_identity",
+          "promptLabel": "[@SUBJECT_NAME]"
+        },
+        {
+          "file": "images/design_studio.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@DESIGN_STUDIO]"
+        },
+        {
+          "file": "images/textile_reference.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@TEXTILE_REFERENCE]"
+        }
+      ]
+    },
+    {
+      "sceneId": 3,
+      "title": "WOMEN FEEL SEEN",
+      "timecode": "00:20-00:30",
+      "duration": 10,
+      "voiceover": "I create for women who want to feel seen, confident, and completely themselves. My work gives that feeling a place to live.",
+      "prompt": "SCENE CONTEXT:\nThe woman is now inside a beautifully designed boutique or private brand showroom. A small group of Indian women interact naturally with her clothing collection. One woman tries on a garment and looks into a mirror with genuine delight while the founder watches from nearby, then gently adjusts the garment at the shoulder. The scene visualizes the deeper purpose behind the business: creating clothes that make Indian women feel seen, confident, and represented.\n\nACTIVE REFERENCES:\n- `[@SUBJECT_NAME]` — 100% matched to reference image `[SUBJECT_REFERENCE_IMAGE]`. Wardrobe locked strictly to refined founder styling in warm neutrals, minimal jewelry, polished but approachable.\n- `[@CUSTOMER_1]` — Reference image `[CUSTOMER_REFERENCE_IMAGE]`, natural Indian female appearance, authentic non-model energy, wardrobe styling appropriate to the brand collection.\n- `[@BOUTIQUE]` — STYLE REFERENCE ONLY, not a fixed keyframe. Warm contemporary boutique combining modern minimalism with subtle Indian material and craft references.\n- `[@GARMENT_REFERENCE]` — STYLE REFERENCE ONLY. Premium contemporary Indian womenswear with elegant silhouettes, sophisticated colors, high-quality fabric.\n\nLOCATION MAP:\n- `[@BOUTIQUE]` — STYLE REFERENCE ONLY, not a fixed keyframe.\n  - Foreground: Softly blurred clothing rack and warm pendant glow framing the lower edge.\n  - Midground: Customer wearing the garment near a large mirror while `[@SUBJECT_NAME]` approaches from the side.\n  - Background: Elegant clothing displays, textured wall, warm wood, subtle plants, minimal boutique seating, sophisticated ambient depth.\n\nFIRST FRAME / BLOCKING:\nAt t=0, vertical 9:16. `[@CUSTOMER_1]` stands slightly left of center facing a tall mirror, admiring the garment. `[@SUBJECT_NAME]` is three to four steps behind and to camera-right, watching with a gentle smile. The customer's reflection is clearly visible. The composition emphasizes authentic emotional connection rather than product advertisement.\n\nFORMAT MODE:\nOne continuous 10-second shot — no internal edits, jump cuts, or scene transitions.\n\nOPTICS:\n9:16, 50mm prime lens, shallow depth of field, soft cinematic bokeh, subtle highlight roll-off on skin and fabrics.\n\nCAMERA:\nGentle steadicam tracking movement toward the mirror, curving slightly around `[@CUSTOMER_1]` so both her real figure and reflection remain visually connected, finishing with `[@SUBJECT_NAME]` entering the same emotional composition.\n\nACTION:\nFrom 0–3 seconds the customer lightly touches the garment while looking at herself. From 3–5 seconds she smiles naturally at her reflection. From 5–7 seconds `[@SUBJECT_NAME]` approaches and gently adjusts the shoulder or sleeve of the garment. From 7–9 seconds the customer looks at her and they exchange a warm, genuine smile. From 9–10 seconds the customer looks back at herself in the mirror with increased confidence.\n\nPERFORMANCE:\nCustomer's expression transitions from curiosity to recognition and quiet joy. `[@SUBJECT_NAME]` shows warmth and attentiveness, not a sales expression. Natural eye contact, subtle smile, relaxed shoulders, believable interpersonal timing.\n\nPHYSICS:\nGarment fabric drapes naturally over the customer, slight movement from arm adjustment, realistic mirror reflections, realistic body weight and contact shadows, natural hair movement, no impossible garment deformation.\n\nLIGHTING:\nWarm boutique key lighting around 3400K with soft daylight contribution around 5000K from storefront windows. Subtle rim lighting on subjects, soft facial shadows, warm highlights on fabric texture.\n\nCOLOR GRADE:\nWarm cream, muted rose, terracotta, deep brown, soft gold. Highlight accent `#D9A15B`. Rich but elegant contrast, flattering skin tones.\n\nAUDIO:\nNO BACKGROUND MUSIC.\n\n- SFX: Quiet boutique room tone, subtle fabric movement, soft footsteps, light garment handling, distant natural conversation ambience.\n- Voiceover: *(00:20 – 00:30)* \"I create for women who want to feel seen, confident, and completely themselves. My work gives that feeling a place to live.\"\n\nSTYLE:\n8K cinema master quality, photorealistic grain profile, true-to-life optics, zero game-engine look, zero artificial skin smoothing.\n\nOUTPUT SETTINGS & POSITIVE LOCKS:\n- Aspect Ratio: 9:16 (Vertical Mobile Ratio).\n- Duration: 10 seconds.\n- Positive Locks: Unbroken 10s shot. `[@SUBJECT_NAME]` identity and wardrobe locked strictly to input reference image `[SUBJECT_REFERENCE_IMAGE]`. Authentic Indian women, emotionally believable interaction, premium fashion-film aesthetic, no exaggerated commercial smiles, no fashion runway behavior.",
+      "stockQuery": "boutique fitting room mirror elegant saree woman",
+      "referenceImages": [
+        {
+          "file": "images/subject_reference.jpg",
+          "role": "subject_identity",
+          "promptLabel": "[@SUBJECT_NAME]"
+        },
+        {
+          "file": "images/customer_reference.png",
+          "role": "customer_identity",
+          "promptLabel": "[@CUSTOMER_1]"
+        },
+        {
+          "file": "images/boutique.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@BOUTIQUE]"
+        },
+        {
+          "file": "images/garment_reference.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@GARMENT_REFERENCE]"
+        }
+      ]
+    },
+    {
+      "sceneId": 4,
+      "title": "I FINISH WHAT I START",
+      "timecode": "00:30-00:40",
+      "duration": 10,
+      "voiceover": "I am consistent. I complete what I begin. Every finished promise teaches me that I can trust myself.",
+      "prompt": "SCENE CONTEXT:\nA later stage of the brand's journey: the woman stands in a sophisticated workspace surrounded by finished garment samples and neatly organized completed orders. She reviews a final collection board, signs off on a completed production sheet, then places the document into a completed stack. The scene is a visual answer to her limiting belief that she is not consistent enough. It should communicate completion, reliability, and self-trust without showing struggle or hardship.\n\nACTIVE REFERENCES:\n- `[@SUBJECT_NAME]` — 100% matched to reference image `[SUBJECT_REFERENCE_IMAGE]`. Wardrobe locked strictly to an elegant monochromatic founder outfit: tailored cream blazer, understated top, dark tailored trousers, minimal gold accessories.\n- `[@FOUNDER_STUDIO]` — STYLE REFERENCE ONLY, not a fixed keyframe. Premium founder office connected to a fashion production studio, sophisticated natural materials, organized finished-product environment.\n- `[@COLLECTION_REFERENCE]` — STYLE REFERENCE ONLY. High-end contemporary Indian womenswear collection displayed cohesively.\n\nLOCATION MAP:\n- `[@FOUNDER_STUDIO]` — STYLE REFERENCE ONLY, not a fixed keyframe.\n  - Foreground: Completed design documents, production checklist, pen, neatly arranged garment tags, one finished package partially visible.\n  - Midground: `[@SUBJECT_NAME]` seated or standing at the worktable, signing the final production approval.\n  - Background: Organized rails of finished clothing, stacked premium packaging, mood board and subtle brand elements, softly illuminated.\n\nFIRST FRAME / BLOCKING:\nAt t=0, `[@SUBJECT_NAME]` is seated at a large clean worktable. A final production sheet is centered directly in front of her. A small stack of already-completed documents sits nearby. She is holding a pen and looking at the final line on the page.\n\nFORMAT MODE:\nOne continuous 10-second shot — no internal edits, jump cuts, or scene transitions.\n\nOPTICS:\n9:16, 50mm prime lens, medium shallow depth of field, realistic cinematic sharpness on hands and face, soft background bokeh.\n\nCAMERA:\nSlow push-in from medium shot toward a medium close-up while subtly lowering the camera angle by a few centimeters, creating a restrained sense of grounded confidence.\n\nACTION:\nFrom 0–2 seconds she reviews the last line on the page. From 2–5 seconds she signs the final approval with one steady motion. From 5–7 seconds she places the pen down. From 7–8.5 seconds she lifts the completed document and adds it to the finished stack. From 8.5–10 seconds she rests both hands on the table, looks forward, and gives a small confident breath out.\n\nPERFORMANCE:\nFocused, steady, mature confidence. No nervousness. Subtle eye movement across the page, slight tightening of concentration while signing, then relaxed facial muscles and a quiet feeling of completion after placing the document down. The emotional statement is: \"I can trust myself.\"\n\nPHYSICS:\nPaper responds naturally to hand movement. Pen writes with realistic friction. Documents shift slightly when placed into the stack. Clothing behaves naturally with shoulder and arm movement.\n\nLIGHTING:\nSoft directional daylight at approximately 4800K from camera-left with warm practical lights around 3200K in the background. Subtle rim light around shoulders. Clean realistic contact shadows.\n\nCOLOR GRADE:\nWarm ivory, charcoal, walnut brown, subtle muted gold. Accent `#B88A4A`. Refined contrast with deep but soft shadows.\n\nAUDIO:\nNO BACKGROUND MUSIC.\n\n- SFX: Pen writing on paper, subtle paper movement, distant studio ambience, quiet air-conditioning room tone, soft document placement.\n- Voiceover: *(00:30 – 00:40)* \"I am consistent. I complete what I begin. Every finished promise teaches me that I can trust myself.\"\n\nSTYLE:\n8K cinema master quality, photorealistic grain profile, true-to-life optics, zero game-engine look, zero artificial skin smoothing.\n\nOUTPUT SETTINGS & POSITIVE LOCKS:\n- Aspect Ratio: 9:16 (Vertical Mobile Ratio).\n- Duration: 10 seconds.\n- Positive Locks: Unbroken 10s shot. `[@SUBJECT_NAME]` identity and wardrobe locked strictly to input reference image `[SUBJECT_REFERENCE_IMAGE]`. Clear visual evidence of completion, organized environment, realistic hand interaction, no stress montage, no ticking clocks, no cliché productivity imagery.",
+      "stockQuery": "woman signing documents fashion studio office confidence",
+      "referenceImages": [
+        {
+          "file": "images/subject_reference.jpg",
+          "role": "subject_identity",
+          "promptLabel": "[@SUBJECT_NAME]"
+        },
+        {
+          "file": "images/founder_studio.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@FOUNDER_STUDIO]"
+        },
+        {
+          "file": "images/collection_reference.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@COLLECTION_REFERENCE]"
+        }
+      ]
+    },
+    {
+      "sceneId": 5,
+      "title": "SUCCESS WITH FREEDOM, NOT DISTANCE",
+      "timecode": "00:40-00:50",
+      "duration": 10,
+      "voiceover": "My success gives me freedom, not distance. I have time to build, time to love, and time to be with the people who stood beside me.",
+      "prompt": "SCENE CONTEXT:\nA warm evening at a beautiful family home. The woman has achieved meaningful success, but the success has not separated her from the people who supported her. She arrives home carrying a small elegant gift bag from her brand, greets a close family member warmly, then sits at the table with her family. The emotional focus is not wealth itself but freedom of time, presence, gratitude, and maintaining the relationships she feared losing.\n\nACTIVE REFERENCES:\n- `[@SUBJECT_NAME]` — 100% matched to reference image `[SUBJECT_REFERENCE_IMAGE]`. Wardrobe locked strictly to elegant evening attire in soft cream or muted jewel tones, minimal jewelry.\n- `[@FAMILY_HOME]` — STYLE REFERENCE ONLY, not a fixed keyframe. Warm contemporary Indian family home with natural wood, soft lamps, elegant dining area, subtle lived-in details.\n- `[@FAMILY_MEMBER]` — Reference image `[FAMILY_REFERENCE_IMAGE]` if available, otherwise use a natural-looking adult family member with age-appropriate styling.\n\nLOCATION MAP:\n- `[@FAMILY_HOME]` — STYLE REFERENCE ONLY, not a fixed keyframe.\n  - Foreground: Warm dining table edge, soft practical lamp glow, subtle family objects and flowers.\n  - Midground: `[@SUBJECT_NAME]` enters the room and approaches `[@FAMILY_MEMBER]`.\n  - Background: Comfortable family dining room opening toward a warm living space, soft evening practical lighting, tasteful contemporary Indian details.\n\nFIRST FRAME / BLOCKING:\nAt t=0, vertical 9:16. `[@SUBJECT_NAME]` enters from camera-left holding a small elegant bag in one hand. `[@FAMILY_MEMBER]` is visible in the background turning toward her. Warm light creates a welcoming evening atmosphere.\n\nFORMAT MODE:\nOne continuous 10-second shot — no internal edits, jump cuts, or scene transitions.\n\nOPTICS:\n9:16, 35mm prime lens, moderately shallow depth of field to preserve environmental context, cinematic highlight bloom from practical lamps.\n\nCAMERA:\nSmooth handheld-gimbal tracking backward as she walks into the room, then gently arcs to the side as she reaches her family member, finishing in a balanced two-person composition.\n\nACTION:\nFrom 0–3 seconds she walks naturally into the room. From 3–5 seconds she smiles and opens her arms. From 5–7 seconds she gives her family member a warm embrace. From 7–8.5 seconds they separate slightly and share a genuine smile. From 8.5–10 seconds she places the bag on the dining table and sits down, signaling that she has time to be fully present.\n\nPERFORMANCE:\nWarm, genuine affection. Relaxed smile, soft eyes, natural embrace, subtle laughter in the eyes, no theatrical emotional display. The family member responds with familiarity and warmth, communicating long-term connection.\n\nPHYSICS:\nNatural walking momentum, realistic embrace and body contact, clothing movement from walking and sitting, soft bag movement as it is placed on the table, realistic chair movement.\n\nLIGHTING:\nWarm evening practical key around 3000K from pendant and table lamps with subtle cooler ambient fill around 4000K. Soft rim from the room behind them. Deep but welcoming shadows.\n\nCOLOR GRADE:\nWarm amber, cream, walnut, muted burgundy, soft skin tones. Highlight accent `#E8B36B`. Rich intimate contrast while maintaining natural skin color.\n\nAUDIO:\nNO BACKGROUND MUSIC.\n\n- SFX: Soft footsteps, fabric movement, warm household room tone, subtle chair movement, quiet natural family ambience, gentle embrace fabric contact.\n- Voiceover: *(00:40 – 00:50)* \"My success gives me freedom, not distance. I have time to build, time to love, and time to be with the people who stood beside me.\"\n\nSTYLE:\n8K cinema master quality, photorealistic grain profile, true-to-life optics, zero game-engine look, zero artificial skin smoothing.\n\nOUTPUT SETTINGS & POSITIVE LOCKS:\n- Aspect Ratio: 9:16 (Vertical Mobile Ratio).\n- Duration: 10 seconds.\n- Positive Locks: Unbroken 10s shot. `[@SUBJECT_NAME]` identity and wardrobe locked strictly to input reference image `[SUBJECT_REFERENCE_IMAGE]`. Genuine family warmth, believable Indian home environment, no luxury-showoff behavior, no visible money symbolism, emotional emphasis on presence and connection.",
+      "stockQuery": "family home evening hug warm dining table",
+      "referenceImages": [
+        {
+          "file": "images/subject_reference.jpg",
+          "role": "subject_identity",
+          "promptLabel": "[@SUBJECT_NAME]"
+        },
+        {
+          "file": "images/family_home.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@FAMILY_HOME]"
+        },
+        {
+          "file": "images/family_reference.png",
+          "role": "family_member_identity",
+          "promptLabel": "[@FAMILY_MEMBER]"
+        }
+      ]
+    },
+    {
+      "sceneId": 6,
+      "title": "I AM ALREADY BECOMING HER",
+      "timecode": "00:50-01:00",
+      "duration": 10,
+      "voiceover": "I am the woman who keeps her word to herself. I build with purpose, live with freedom, and never have to shrink to belong.",
+      "prompt": "SCENE CONTEXT:\nGolden-hour rooftop overlooking a beautiful modern city. The woman stands quietly after a full day, wearing the same refined founder wardrobe language established throughout the reel. She looks toward the horizon, then slowly turns slightly toward camera with a peaceful, grounded expression. In the distance, subtle indications of her world exist: architectural beauty, city life, a sense of possibility. The final scene is not about reaching a finish line; it is about embodying the woman she has become — calm, capable, free, connected, and certain.\n\nACTIVE REFERENCES:\n- `[@SUBJECT_NAME]` — 100% matched to reference image `[SUBJECT_REFERENCE_IMAGE]`. Wardrobe locked strictly to elegant founder styling consistent with previous scenes: sophisticated cream or muted earth-tone outfit, minimal gold accessories, polished natural appearance.\n- `[@CITY_VIEW]` — STYLE REFERENCE ONLY, not a fixed keyframe. Sophisticated modern city at golden hour with warm architectural lights beginning to appear.\n- `[@BRAND_SYMBOLISM]` — STYLE REFERENCE ONLY. Optional subtle physical cue such as a premium garment swatch, sketchbook, or small finished design portfolio placed nearby, never a literal giant logo.\n\nLOCATION MAP:\n- `[@CITY_VIEW]` — STYLE REFERENCE ONLY, not a fixed keyframe.\n  - Foreground: Rooftop architectural edge and subtle foreground foliage softly framing the subject.\n  - Midground: `[@SUBJECT_NAME]` standing near the rooftop edge, centered with significant negative space around her.\n  - Background: Expansive city skyline transitioning from golden hour into early evening, distant lights gradually becoming visible, soft atmospheric depth.\n\nFIRST FRAME / BLOCKING:\nAt t=0, vertical 9:16. `[@SUBJECT_NAME]` stands in a three-quarter rear profile facing the skyline, shoulders relaxed, hands naturally resting by her sides. The camera begins slightly behind her left shoulder. Warm sunlight outlines her hair and shoulders while the city extends into the distance.\n\nFORMAT MODE:\nOne continuous 10-second shot — no internal edits, jump cuts, or scene transitions.\n\nOPTICS:\n9:16, 85mm prime lens, cinematic compressed perspective, shallow depth of field with soft skyline bokeh, gentle anamorphic-style highlight bloom without artificial distortion.\n\nCAMERA:\nSlow cinematic arc from behind-left profile toward a subtle front three-quarter angle, moving approximately 120 degrees around the subject over 10 seconds while maintaining a stable horizon and very slow forward drift.\n\nACTION:\nFrom 0–3 seconds she remains still, looking toward the skyline and breathing naturally. From 3–5 seconds she subtly raises her chin and takes a deeper breath. From 5–7 seconds she turns slowly toward the camera. From 7–9 seconds she holds a calm, confident gaze just past the lens. From 9–10 seconds she gives the smallest genuine smile and remains completely still as the shot resolves.\n\nPERFORMANCE:\nThe deepest emotional performance of the reel: peaceful certainty, self-respect, grounded confidence, gratitude, and quiet joy. No triumphant pose. Her eyes communicate that she no longer needs external validation to believe in herself. Natural blinking, breathing, micro facial movement, soft catch-lights.\n\nPHYSICS:\nGentle evening breeze moves hair and clothing naturally. Fabric responds with slight delayed motion. Rooftop atmosphere remains physically consistent. No exaggerated wind or cinematic slow motion.\n\nLIGHTING:\nGolden-hour key approximately 4800K from low sun behind and slightly camera-right. Soft neutral frontal fill around 4300K. Subtle warm rim light around hair and shoulders. Natural transition toward cooler ambient sky at approximately 6000K.\n\nCOLOR GRADE:\nChampagne gold, warm cream, muted terracotta, deep navy-blue sky, soft amber city lights. Highlight accent `#F2C878`. Gradual warm-to-cool tonal transition, sophisticated cinematic contrast.\n\nAUDIO:\nNO BACKGROUND MUSIC.\n\n- SFX: Gentle rooftop ambience, soft wind, distant city soundscape, subtle fabric movement, natural breathing.\n- Voiceover: *(00:50 – 01:00)* \"I am the woman who keeps her word to herself. I build with purpose, live with freedom, and never have to shrink to belong.\"\n\nSTYLE:\n8K cinema master quality, photorealistic grain profile, true-to-life optics, zero game-engine look, zero artificial skin smoothing.\n\nOUTPUT SETTINGS & POSITIVE LOCKS:\n- Aspect Ratio: 9:16 (Vertical Mobile Ratio).\n- Duration: 10 seconds.\n- Positive Locks: Unbroken 10s shot. `[@SUBJECT_NAME]` identity and wardrobe locked strictly to input reference image `[SUBJECT_REFERENCE_IMAGE]`. Peaceful cinematic finale, realistic human expression, premium aspirational mood without excessive wealth imagery, no generic motivational pose, no supernatural manifestation effects, no text rendered inside environment.",
+      "stockQuery": "rooftop golden hour city skyline woman standing",
+      "referenceImages": [
+        {
+          "file": "images/subject_reference.jpg",
+          "role": "subject_identity",
+          "promptLabel": "[@SUBJECT_NAME]"
+        },
+        {
+          "file": "images/city_view.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@CITY_VIEW]"
+        },
+        {
+          "file": "images/brand_symbolism.jpg",
+          "role": "style_reference",
+          "promptLabel": "[@BRAND_SYMBOLISM]"
+        }
+      ]
+    }
+  ]
+}

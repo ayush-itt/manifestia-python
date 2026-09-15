@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "category": {
+    "type": "mood",
+    "name": "mood",
+    "slug": "mood"
+  },
+  "subCategory": {
+    "name": "meditation",
+    "slug": "meditation"
+  },
+  "source": {
+    "provider": "ElevenLabs",
+    "url": "https://elevenlabs.io/music/meditation?_gl=1*lliy3n*_up*MQ..*_ga*MTY0NjExMjMyNC4xNzg3MjE3MDMz*_ga_82RG1PXYVW*czE3ODcyMTcwMzIkbzEkZzAkdDE3ODcyMTcwMzIkajYwJGwwJGgw",
+    "scrapedAt": "2026-08-20T09:19:41.096Z"
+  },
+  "count": 7,
+  "musics": [
+    {
+      "id": "68b48cf07e2b6acbcec5386f",
+      "title": "Astral Current",
+      "tags": [],
+      "duration": "04:54",
+      "audio": {
+        "fileName": "astral-current.mp3",
+        "file": "./music/astral-current.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/ef2yj1r3e6v.mp3"
+      }
+    },
+    {
+      "id": "68b48e8c13173db177b7ba3e",
+      "title": "Astral Veil",
+      "tags": [
+        "Ambient",
+        "New Age",
+        "Drone Music",
+        "Meditation Music",
+        "Electronic",
+        "Synthesizer",
+        "Synth Pads",
+        "Arrhythmic",
+        "Slow",
+        "Calm",
+        "Serene",
+        "Peaceful",
+        "Relaxing",
+        "Ethereal",
+        "Spacious",
+        "Contemplative",
+        "Atmospheric",
+        "Textural",
+        "Instrumental"
+      ],
+      "duration": "04:54",
+      "audio": {
+        "fileName": "astral-veil.mp3",
+        "file": "./music/astral-veil.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/mv66e6jevx.mp3"
+      }
+    },
+    {
+      "id": "68b4949e13173db177b7ea9b",
+      "title": "Astral Reverie",
+      "tags": [
+        "Ambient",
+        "Drone",
+        "Space Music",
+        "Synthesizer",
+        "Pads",
+        "Atmospheric",
+        "Meditative",
+        "Contemplative",
+        "Serene",
+        "Ethereal",
+        "Calm",
+        "Instrumental"
+      ],
+      "duration": "04:56",
+      "audio": {
+        "fileName": "astral-reverie.mp3",
+        "file": "./music/astral-reverie.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/66gz3tq0obo.mp3"
+      }
+    },
+    {
+      "id": "68b49581f13c3cbf121877f3",
+      "title": "Chamber of Murmurs",
+      "tags": [
+        "Dark Ambient",
+        "Drone",
+        "Soundscape",
+        "Experimental",
+        "Atmospheric",
+        "Textural",
+        "Eerie",
+        "Mysterious",
+        "Haunting",
+        "Subterranean",
+        "Introspective"
+      ],
+      "duration": "05:47",
+      "audio": {
+        "fileName": "chamber-of-murmurs.mp3",
+        "file": "./music/chamber-of-murmurs.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/pzgfoyv0lc.mp3"
+      }
+    },
+    {
+      "id": "68b496483c5cb3b05414e499",
+      "title": "Cosmic Sanctuary",
+      "tags": [
+        "Ambient",
+        "Drone",
+        "Space Music",
+        "Meditative",
+        "Atmospheric",
+        "Ethereal",
+        "Synth Pad",
+        "New Age",
+        "Serene",
+        "Contemplative",
+        "Cinematic",
+        "Instrumental",
+        "Relaxing",
+        "Calm"
+      ],
+      "duration": "04:56",
+      "audio": {
+        "fileName": "cosmic-sanctuary.mp3",
+        "file": "./music/cosmic-sanctuary.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/4uvduh0cngx.mp3"
+      }
+    },
+    {
+      "id": "68b55c597d72f97819921a61",
+      "title": "Chamber of Shadows",
+      "tags": [
+        "Dark Ambient",
+        "Drone",
+        "Soundscape",
+        "Atmospheric",
+        "Experimental",
+        "Textural",
+        "Introspective",
+        "Mysterious",
+        "Eerie",
+        "Industrial Ambient"
+      ],
+      "duration": "05:47",
+      "audio": {
+        "fileName": "chamber-of-shadows.mp3",
+        "file": "./music/chamber-of-shadows.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/x03n8law95d.mp3"
+      }
+    },
+    {
+      "id": "68b55d1110649c48f5983c84",
+      "title": "Cosmic Contemplation",
+      "tags": [
+        "Ambient",
+        "New Age",
+        "Meditation Music",
+        "Drone",
+        "Atmospheric",
+        "Cinematic",
+        "Ethereal",
+        "Calm",
+        "Peaceful",
+        "Serene",
+        "Contemplative",
+        "Introspective",
+        "Soothing",
+        "Synth Pad"
+      ],
+      "duration": "04:56",
+      "audio": {
+        "fileName": "cosmic-contemplation.mp3",
+        "file": "./music/cosmic-contemplation.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/xyfqqlnbaic.mp3"
+      }
+    }
+  ]
+}

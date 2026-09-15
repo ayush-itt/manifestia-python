@@ -1,0 +1,80 @@
+{
+  "system_defaults": {
+    "device": "mobile",
+    "aspect": "9:16",
+    "duration_seconds": 60,
+    "scene_count": 6,
+    "scene_duration_seconds": 10,
+    "duration_profile": "reel_60"
+  },
+  "questions": [
+    {
+      "id": "name",
+      "type": "text",
+      "prompt": "What's your first name?",
+      "placeholder": "Your first name",
+      "asked_by": "user",
+      "derives": ["personalization"]
+    },
+    {
+      "id": "gender",
+      "type": "choice",
+      "prompt": "How would you describe yourself?",
+      "options": ["Female", "Male", "Prefer not to say"],
+      "asked_by": "user",
+      "derives": ["gender", "voice"]
+    },
+    {
+      "id": "voice",
+      "type": "choice",
+      "prompt": "Which voice should narrate your reel?",
+      "options_from": "voices",
+      "asked_by": "user",
+      "derives": ["voice"]
+    },
+    {
+      "id": "life_areas",
+      "type": "multi_choice",
+      "prompt": "Which areas of life do you want this reel to focus on?",
+      "options_from": "life_areas",
+      "asked_by": "user",
+      "derives": ["matched_areas"]
+    },
+    {
+      "id": "area_focus",
+      "type": "multi_choice",
+      "prompt": "What specifically matters most in those areas?",
+      "options_from": "chips_for_selected_areas",
+      "asked_by": "user",
+      "derives": ["focus_chips"]
+    },
+    {
+      "id": "reel_variants",
+      "type": "multi_choice",
+      "prompt": "Which reel types should we generate?",
+      "asked_by": "user",
+      "derives": ["variant_types"],
+      "option_items": [
+        { "id": "ai_video", "label": "Full AI video" },
+        { "id": "mixed", "label": "Mixed media" },
+        { "id": "images_only", "label": "Images only" }
+      ]
+    },
+    {
+      "id": "identity_statement",
+      "type": "text",
+      "prompt": "Complete this sentence: I am becoming someone who...",
+      "placeholder": "finishes what she starts and builds things that help people feel seen",
+      "asked_by": "user",
+      "derives": ["identity_anchor"]
+    },
+    {
+      "id": "limiting_belief",
+      "type": "text",
+      "prompt": "What belief about yourself most often makes that future feel difficult?",
+      "placeholder": "I am not consistent enough",
+      "asked_by": "user",
+      "derives": ["contrast_for_affirmation"]
+    }
+  ]
+}

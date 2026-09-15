@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "category": {
+    "type": "mood",
+    "name": "mood",
+    "slug": "mood"
+  },
+  "subCategory": {
+    "name": "reflective",
+    "slug": "reflective"
+  },
+  "source": {
+    "provider": "ElevenLabs",
+    "url": "https://elevenlabs.io/music/reflective?_gl=1*daql3z*_up*MQ..*_ga*MTE5OTk0ODQzNS4xNzg3MjEzMTMz*_ga_82RG1PXYVW*czE3ODcyMTMxMzIkbzEkZzEkdDE3ODcyMTMzMjkkajYwJGwwJGgw",
+    "scrapedAt": "2026-08-20T08:11:39.144Z"
+  },
+  "count": 11,
+  "musics": [
+    {
+      "id": "68b54ac43771a8a634dba5ca",
+      "title": "Vanishing Reverie",
+      "tags": [],
+      "duration": "02:23",
+      "audio": {
+        "fileName": "vanishing-reverie.mp3",
+        "file": "./music/vanishing-reverie.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/ns1zoxuxiva.mp3"
+      }
+    },
+    {
+      "id": "68b54b1cd7684e9828957a7e",
+      "title": "Celestial Echoes",
+      "tags": [
+        "Ambient",
+        "New Age",
+        "Cinematic",
+        "Fantasy",
+        "Video Game Music",
+        "Synthesizer",
+        "Synth Pad",
+        "Synth Bell",
+        "Celesta",
+        "Wind Chimes",
+        "Arpeggiator",
+        "Peaceful",
+        "Calm",
+        "Serene",
+        "Dreamy",
+        "Ethereal",
+        "Magical",
+        "Tranquil",
+        "Gentle",
+        "Atmospheric",
+        "Relaxing",
+        "Meditative",
+        "Slow Tempo",
+        "Instrumental"
+      ],
+      "duration": "02:31",
+      "audio": {
+        "fileName": "celestial-echoes.mp3",
+        "file": "./music/celestial-echoes.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/24hubycj15l.mp3"
+      }
+    },
+    {
+      "id": "68b54b62dcacfd3d44b68508",
+      "title": "Echoes of a Forgotten Age",
+      "tags": [
+        "Cinematic",
+        "Orchestral",
+        "Ambient",
+        "Soundtrack",
+        "String Pad",
+        "Synthesizer",
+        "Choir Pad",
+        "Slow Tempo",
+        "Arrhythmic",
+        "Epic",
+        "Majestic",
+        "Solemn",
+        "Contemplative",
+        "Expansive",
+        "Dramatic",
+        "Ethereal"
+      ],
+      "duration": "03:04",
+      "audio": {
+        "fileName": "echoes-of-a-forgotten-age.mp3",
+        "file": "./music/echoes-of-a-forgotten-age.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/fvb16iduovv.mp3"
+      }
+    },
+    {
+      "id": "68b54ba2edc75963e89cf709",
+      "title": "Tango for a Solitary Night",
+      "tags": [
+        "Instrumental",
+        "Acoustic",
+        "Neo-Classical",
+        "Folk",
+        "World",
+        "Cello",
+        "Acoustic Guitar",
+        "Melancholic",
+        "Somber",
+        "Passionate",
+        "Dramatic",
+        "Introspective",
+        "Tango",
+        "Rhythmic"
+      ],
+      "duration": "02:56",
+      "audio": {
+        "fileName": "tango-for-a-solitary-night.mp3",
+        "file": "./music/tango-for-a-solitary-night.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/mdaegqq5pg8.mp3"
+      }
+    },
+    {
+      "id": "68b54bd9bf1b75edbcdcfcd7",
+      "title": "Astral Veilways",
+      "tags": [
+        "Ambient",
+        "Space Ambient",
+        "Drone",
+        "Atmospheric",
+        "Cinematic",
+        "Ethereal",
+        "Meditative",
+        "Introspective",
+        "Mysterious",
+        "Synth Pad",
+        "Calm"
+      ],
+      "duration": "02:12",
+      "audio": {
+        "fileName": "astral-veilways.mp3",
+        "file": "./music/astral-veilways.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/p5fwyenvm0b.mp3"
+      }
+    },
+    {
+      "id": "68b54bfa8a7cf15703ccdfac",
+      "title": "The Shadowed Hall",
+      "tags": [
+        "Cinematic",
+        "Orchestral",
+        "Ambient",
+        "Soundtrack",
+        "Dark Ambient",
+        "Strings",
+        "Slow",
+        "Atmospheric",
+        "Somber",
+        "Mysterious",
+        "Tense",
+        "Suspenseful",
+        "Epic"
+      ],
+      "duration": "01:16",
+      "audio": {
+        "fileName": "the-shadowed-hall.mp3",
+        "file": "./music/the-shadowed-hall.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/zm7pk5xdafd.mp3"
+      }
+    },
+    {
+      "id": "68b54c1fd7684e98289583d6",
+      "title": "Basement Dub",
+      "tags": [
+        "Reggae",
+        "Dub",
+        "Instrumental",
+        "Chill",
+        "Relaxed",
+        "Groovy",
+        "Laid-back",
+        "Roots Reggae"
+      ],
+      "duration": "01:29",
+      "audio": {
+        "fileName": "basement-dub.mp3",
+        "file": "./music/basement-dub.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/hk0n3jrl1mr.mp3"
+      }
+    },
+    {
+      "id": "68b54c4b377cbefe859639d9",
+      "title": "Phantom Circuit Flow",
+      "tags": [
+        "Lofi Trap",
+        "Chillwave",
+        "Instrumental Hip-Hop",
+        "Melancholic",
+        "Introspective",
+        "Atmospheric",
+        "Electronic",
+        "Synth-driven",
+        "Relaxed",
+        "Nocturnal"
+      ],
+      "duration": "01:46",
+      "audio": {
+        "fileName": "phantom-circuit-flow.mp3",
+        "file": "./music/phantom-circuit-flow.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/86yyt9hsrct.mp3"
+      }
+    },
+    {
+      "id": "68b54c76ec32fc7220115777",
+      "title": "Prism Drift",
+      "tags": [
+        "Ambient",
+        "Drone",
+        "Meditative",
+        "Relaxing",
+        "Calm",
+        "Peaceful",
+        "Ethereal",
+        "Serene",
+        "Atmospheric",
+        "Synth Pad",
+        "Minimalist",
+        "Spiritual",
+        "New Age"
+      ],
+      "duration": "01:47",
+      "audio": {
+        "fileName": "prism-drift.mp3",
+        "file": "./music/prism-drift.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/aj823gew2hw.mp3"
+      }
+    },
+    {
+      "id": "68b54d030ff3d0d482b13018",
+      "title": "Alone in Gentle Light",
+      "tags": [
+        "Instrumental",
+        "Solo Acoustic Guitar",
+        "Nylon String Guitar",
+        "Contemplative",
+        "Melancholic",
+        "Peaceful",
+        "Introspective",
+        "Slow Tempo",
+        "Fingerstyle",
+        "Ballad",
+        "Serene",
+        "Wistful"
+      ],
+      "duration": "02:25",
+      "audio": {
+        "fileName": "alone-in-gentle-light.mp3",
+        "file": "./music/alone-in-gentle-light.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/egtwfxnxaj5.mp3"
+      }
+    },
+    {
+      "id": "68b55e5ab9799371d2548334",
+      "title": "Alone with Gentle Thoughts",
+      "tags": [
+        "Acoustic",
+        "Instrumental",
+        "Calm",
+        "Melancholic",
+        "Introspective",
+        "Peaceful",
+        "Soothing",
+        "Ambient",
+        "Classical Guitar",
+        "Nylon String Guitar",
+        "Ballad",
+        "Slow",
+        "Minimalist"
+      ],
+      "duration": "02:25",
+      "audio": {
+        "fileName": "alone-with-gentle-thoughts.mp3",
+        "file": "./music/alone-with-gentle-thoughts.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/rmg7uyaqer.mp3"
+      }
+    }
+  ]
+}

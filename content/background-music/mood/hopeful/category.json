@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "category": {
+    "type": "mood",
+    "name": "mood",
+    "slug": "mood"
+  },
+  "subCategory": {
+    "name": "hopeful",
+    "slug": "hopeful"
+  },
+  "source": {
+    "provider": "ElevenLabs",
+    "url": "https://elevenlabs.io/music/hopeful?_gl=1*wfc2zh*_up*MQ..*_ga*MTY0NjExMjMyNC4xNzg3MjE3MDMz*_ga_82RG1PXYVW*czE3ODcyMTcwMzIkbzEkZzAkdDE3ODcyMTcwMzIkajYwJGwwJGgw",
+    "scrapedAt": "2026-08-20T09:21:58.777Z"
+  },
+  "count": 10,
+  "musics": [
+    {
+      "id": "68b48ac1a0c7b9c5641df649",
+      "title": "Rise of the Titans",
+      "tags": [],
+      "duration": "02:32",
+      "audio": {
+        "fileName": "rise-of-the-titans.mp3",
+        "file": "./music/rise-of-the-titans.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/gq81o0v9jhr.mp3"
+      }
+    },
+    {
+      "id": "68b48b0d0a8b1c9721882bd4",
+      "title": "Distant Shades Unravel",
+      "tags": [
+        "Cinematic",
+        "Soundtrack",
+        "Emotional",
+        "Melancholic",
+        "Introspective",
+        "Piano",
+        "Strings",
+        "Slow Tempo",
+        "Arpeggiated",
+        "Ambient",
+        "Neoclassical",
+        "Building",
+        "Dramatic",
+        "Reflective"
+      ],
+      "duration": "02:24",
+      "audio": {
+        "fileName": "distant-shades-unravel.mp3",
+        "file": "./music/distant-shades-unravel.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/qf2hqcffq3.mp3"
+      }
+    },
+    {
+      "id": "68b48b4544a5497ffe4cd497",
+      "title": "Traces of Distant Light",
+      "tags": [
+        "Cinematic",
+        "Neoclassical",
+        "Soundtrack",
+        "Instrumental",
+        "Piano",
+        "Strings",
+        "Emotional",
+        "Pensive",
+        "Reflective",
+        "Melancholic",
+        "Hopeful",
+        "Atmospheric",
+        "Slow Tempo",
+        "Arpeggiated"
+      ],
+      "duration": "01:45",
+      "audio": {
+        "fileName": "traces-of-distant-light.mp3",
+        "file": "./music/traces-of-distant-light.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/lwbh5a8q11m.mp3"
+      }
+    },
+    {
+      "id": "68b48b7b23cbccd4cf4b095c",
+      "title": "The Unfolding Horizon",
+      "tags": [
+        "Cinematic",
+        "Epic",
+        "Orchestral",
+        "Soundtrack",
+        "Inspirational",
+        "Dramatic",
+        "Powerful",
+        "Emotional",
+        "Building",
+        "Triumphant"
+      ],
+      "duration": "01:44",
+      "audio": {
+        "fileName": "the-unfolding-horizon.mp3",
+        "file": "./music/the-unfolding-horizon.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/l3me9a3c03e.mp3"
+      }
+    },
+    {
+      "id": "68b48bbf7fbbc5620501368d",
+      "title": "Ashes in the Twilight",
+      "tags": [
+        "Cinematic",
+        "Modern Classical",
+        "Film Score",
+        "Ambient",
+        "Instrumental",
+        "Piano",
+        "Strings",
+        "Emotional",
+        "Melancholic",
+        "Introspective",
+        "Dramatic",
+        "Epic",
+        "Atmospheric",
+        "Soaring",
+        "Slow Tempo",
+        "Arpeggiated"
+      ],
+      "duration": "02:38",
+      "audio": {
+        "fileName": "ashes-in-the-twilight.mp3",
+        "file": "./music/ashes-in-the-twilight.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/4n8wtyfzql2.mp3"
+      }
+    },
+    {
+      "id": "68b48beffee58f0995cbeb24",
+      "title": "Afternoon Serenade",
+      "tags": [
+        "Acoustic",
+        "Folk Pop",
+        "Instrumental",
+        "Upbeat",
+        "Cheerful",
+        "Lighthearted",
+        "Optimistic",
+        "Romantic",
+        "Acoustic Guitar",
+        "Rhythmic",
+        "Catchy",
+        "Sunny"
+      ],
+      "duration": "01:58",
+      "audio": {
+        "fileName": "afternoon-serenade.mp3",
+        "file": "./music/afternoon-serenade.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/4cjxrwly3y.mp3"
+      }
+    },
+    {
+      "id": "68b48c329ab785ce1f78f55d",
+      "title": "Reflections in Rain",
+      "tags": [
+        "Neo-classical",
+        "Ambient",
+        "Cinematic",
+        "Instrumental",
+        "Piano",
+        "Acoustic Piano",
+        "Slow Tempo",
+        "Lento",
+        "Rubato",
+        "Introspective",
+        "Melancholic",
+        "Poignant",
+        "Reflective",
+        "Delicate",
+        "Atmospheric",
+        "Arpeggiated",
+        "Dynamic Contrast",
+        "Solo Piano"
+      ],
+      "duration": "02:44",
+      "audio": {
+        "fileName": "reflections-in-rain.mp3",
+        "file": "./music/reflections-in-rain.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/kkofms34l4.mp3"
+      }
+    },
+    {
+      "id": "68b48c5dfee58f0995cbee05",
+      "title": "Revelation of Light",
+      "tags": [
+        "Cinematic",
+        "Orchestral",
+        "Epic",
+        "Emotional",
+        "Soundtrack",
+        "Piano",
+        "Strings",
+        "Building",
+        "Hopeful",
+        "Atmospheric",
+        "Dramatic",
+        "Inspirational"
+      ],
+      "duration": "01:16",
+      "audio": {
+        "fileName": "revelation-of-light.mp3",
+        "file": "./music/revelation-of-light.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/cc5xgtqt8u5.mp3"
+      }
+    },
+    {
+      "id": "68b48c9b30b513d9f3dd081f",
+      "title": "An Unfolding Journey",
+      "tags": [
+        "Cinematic",
+        "Orchestral",
+        "Epic",
+        "Emotional",
+        "Inspiring",
+        "Soundtrack",
+        "Modern Classical",
+        "Piano",
+        "Strings",
+        "Building",
+        "Atmospheric",
+        "Powerful",
+        "Hopeful"
+      ],
+      "duration": "02:14",
+      "audio": {
+        "fileName": "an-unfolding-journey.mp3",
+        "file": "./music/an-unfolding-journey.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/h577lqsqoo.mp3"
+      }
+    },
+    {
+      "id": "68b48ccf856ec32bf27235ef",
+      "title": "Lingering Traces",
+      "tags": [
+        "Cinematic",
+        "Emotional",
+        "Introspective",
+        "Melancholic",
+        "Piano",
+        "Strings",
+        "Soundtrack",
+        "Modern Classical",
+        "Ambient",
+        "Reflective",
+        "Slow"
+      ],
+      "duration": "02:12",
+      "audio": {
+        "fileName": "lingering-traces.mp3",
+        "file": "./music/lingering-traces.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/l3nlj3x2wcp.mp3"
+      }
+    }
+  ]
+}

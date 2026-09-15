@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "category": {
+    "type": "mood",
+    "name": "mood",
+    "slug": "mood"
+  },
+  "subCategory": {
+    "name": "sentimental",
+    "slug": "sentimental"
+  },
+  "source": {
+    "provider": "ElevenLabs",
+    "url": "https://elevenlabs.io/music/sentimental?_gl=1*12uy5u6*_up*MQ..*_ga*NzE2NjcwOTMuMTc4NzI4OTU3MA..*_ga_82RG1PXYVW*czE3ODcyODk1NzAkbzEkZzAkdDE3ODcyODk1NzAkajYwJGwwJGgw",
+    "scrapedAt": "2026-08-21T07:55:48.547Z"
+  },
+  "count": 8,
+  "musics": [
+    {
+      "id": "68b40a10fda6a16f8c54b700",
+      "title": "The Unfolding Fate",
+      "tags": [],
+      "duration": "03:01",
+      "audio": {
+        "fileName": "the-unfolding-fate.mp3",
+        "file": "./music/the-unfolding-fate.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/jvdvzei2vek.mp3"
+      }
+    },
+    {
+      "id": "68b40ae32485b0fd4821fe66",
+      "title": "Stillness Within",
+      "tags": [
+        "Solo Piano",
+        "Contemporary Classical",
+        "Neo-Classical",
+        "Soundtrack",
+        "Ballad",
+        "Introspective",
+        "Melancholic",
+        "Hopeful",
+        "Sentimental",
+        "Calming",
+        "Peaceful",
+        "Reflective",
+        "Delicate",
+        "Slow Tempo",
+        "Instrumental"
+      ],
+      "duration": "01:47",
+      "audio": {
+        "fileName": "stillness-within.mp3",
+        "file": "./music/stillness-within.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/6q8ca96fgo.mp3"
+      }
+    },
+    {
+      "id": "68b40b181f78e4f4546e13a9",
+      "title": "Unfolding Echoes",
+      "tags": [
+        "Cinematic",
+        "Soundtrack",
+        "Ambient",
+        "Neoclassical",
+        "Piano",
+        "Strings",
+        "Emotional",
+        "Introspective",
+        "Pensive",
+        "Hopeful",
+        "Building",
+        "Atmospheric",
+        "Minimalist",
+        "Melancholy",
+        "Slow Tempo"
+      ],
+      "duration": "01:56",
+      "audio": {
+        "fileName": "unfolding-echoes.mp3",
+        "file": "./music/unfolding-echoes.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/0bjwy86ezfi8.mp3"
+      }
+    },
+    {
+      "id": "68b41d3a9241fdf44bc2d85d",
+      "title": "Echoes of a Fading Star",
+      "tags": [
+        "Cinematic",
+        "Orchestral",
+        "Soundtrack",
+        "Ambient",
+        "Neo-Classical",
+        "Piano",
+        "Strings",
+        "Emotional",
+        "Melancholic",
+        "Pensive",
+        "Epic",
+        "Hopeful",
+        "Slow Tempo"
+      ],
+      "duration": "02:26",
+      "audio": {
+        "fileName": "echoes-of-a-fading-star.mp3",
+        "file": "./music/echoes-of-a-fading-star.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/h61bn2ktsto.mp3"
+      }
+    },
+    {
+      "id": "68b41d6ff66dbc47ce1bf647",
+      "title": "Vanishing Afternoon",
+      "tags": [
+        "Minimalist",
+        "Neo-classical",
+        "Ambient",
+        "Film Score",
+        "Solo Piano",
+        "Acoustic Piano",
+        "Slow Tempo",
+        "Free Rhythm",
+        "Melancholic",
+        "Introspective",
+        "Somber",
+        "Pensive",
+        "Reflective",
+        "Delicate",
+        "Calm",
+        "Instrumental",
+        "Arpeggios",
+        "Sparse Arrangement"
+      ],
+      "duration": "01:18",
+      "audio": {
+        "fileName": "vanishing-afternoon.mp3",
+        "file": "./music/vanishing-afternoon.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/efwwu26uqqa.mp3"
+      }
+    },
+    {
+      "id": "68b41e1633809a097599a5e1",
+      "title": "Tempest of the Heart",
+      "tags": [
+        "Instrumental",
+        "Piano",
+        "Solo Piano",
+        "Classical",
+        "Contemporary Classical",
+        "Cinematic",
+        "Soundtrack",
+        "Emotional",
+        "Dramatic",
+        "Passionate",
+        "Melancholic",
+        "Intense",
+        "Virtuosic",
+        "Expressive"
+      ],
+      "duration": "02:10",
+      "audio": {
+        "fileName": "tempest-of-the-heart.mp3",
+        "file": "./music/tempest-of-the-heart.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/0o887rutrnp.mp3"
+      }
+    },
+    {
+      "id": "68b41e4c7818d42ddc71d2f3",
+      "title": "Dawn Beyond the Veil",
+      "tags": [
+        "Cinematic",
+        "Neoclassical",
+        "Ambient",
+        "Orchestral",
+        "Sentimental",
+        "Hopeful",
+        "Introspective",
+        "Peaceful",
+        "Emotional",
+        "Piano",
+        "Strings",
+        "Slow Tempo",
+        "Dreamy"
+      ],
+      "duration": "02:11",
+      "audio": {
+        "fileName": "dawn-beyond-the-veil.mp3",
+        "file": "./music/dawn-beyond-the-veil.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/q5r5xlzw34.mp3"
+      }
+    },
+    {
+      "id": "68b55e8d10649c48f5984ac9",
+      "title": "Echoes in Still Light",
+      "tags": [
+        "Cinematic",
+        "Neo-classical",
+        "Ambient",
+        "Minimalism",
+        "Piano",
+        "Strings",
+        "Instrumental",
+        "Slow Tempo",
+        "Reflective",
+        "Peaceful",
+        "Emotional",
+        "Melancholic",
+        "Hopeful",
+        "Arpeggiated"
+      ],
+      "duration": "02:11",
+      "audio": {
+        "fileName": "echoes-in-still-light.mp3",
+        "file": "./music/echoes-in-still-light.mp3",
+        "originalUrl": "https://eleven-public-cdn.elevenlabs.io/payloadcms/tq78zce3txg.mp3"
+      }
+    }
+  ]
+}

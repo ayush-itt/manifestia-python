@@ -8,11 +8,20 @@ from app.lib.ffmpeg.assembly import has_audio_stream, run_ffmpeg
 
 def overlay_font() -> str:
     candidates = [
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"),
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+        Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf"),
+        Path("/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"),
         Path("C:/Windows/Fonts/georgia.ttf"),
         Path("C:/Windows/Fonts/arial.ttf"),
         Path("C:/Windows/Fonts/segoeui.ttf"),
     ]
-    found = next((p for p in candidates if p.exists()), candidates[1])
+    found = next((p for p in candidates if p.exists()), None)
+    if found is None:
+        raise FileNotFoundError(
+            "No overlay font found. Install fonts-dejavu-core / fonts-liberation (Linux) "
+            "or use a Windows machine with Georgia/Arial."
+        )
     return str(found).replace("\\", "/").replace(":", "\\:")
 
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -27,6 +28,22 @@ def _resolve_path(raw: str | None, fallback: Path) -> Path:
     if raw and raw.strip():
         return Path(raw.strip()).expanduser().resolve()
     return fallback.resolve()
+
+
+def _is_local_public_url(url: str) -> bool:
+    try:
+        host = (urlparse(url).hostname or "").lower()
+        return host in ("localhost", "127.0.0.1", "::1")
+    except Exception:
+        return True
+
+
+def resolve_public_api_url(configured: str) -> str:
+    value = configured.strip()
+    render_url = (os.environ.get("RENDER_EXTERNAL_URL") or "").strip().rstrip("/")
+    if (not value or _is_local_public_url(value)) and render_url:
+        return render_url
+    return value or "http://localhost:4100"
 
 
 def _resolve_story_path(story_path: str, templates_dir: str) -> Path:
@@ -110,6 +127,7 @@ _raw = Settings()
 
 class Config:
     port: int = _raw.port
+    node_env: str = _raw.node_env.strip() or "development"
     cors_origin: str = _raw.cors_origin
     database_path: Path = _raw.resolved_database_path()
     storage_root: Path = _raw.resolved_storage_root()
@@ -120,7 +138,7 @@ class Config:
     nasa_api_key: str = _raw.nasa_api_key
     byteplus_api_url: str = _raw.byteplus_api_url.strip() or DEFAULT_MODELARK_BASE_URL
     byteplus_video_model: str = _raw.byteplus_video_model.strip() or DEFAULT_BYTEPLUS_VIDEO_MODEL
-    public_api_url: str = _raw.public_api_url.strip() or "http://localhost:4100"
+    public_api_url: str = resolve_public_api_url(_raw.public_api_url)
     content_dir: Path = CONTENT_DIR
     story_path: Path = _raw.resolved_story_path()
     story_assets_dir: Path = _raw.resolved_story_assets_dir()

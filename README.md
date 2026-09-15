@@ -18,7 +18,8 @@ Content pack lives in `content/` (story prompts, reference stills, onboarding qu
 
 ## Stack
 
-- Backend: Python 3.11+ + FastAPI + SQLite + OpenAPI
+- Backend: Python 3.11–3.13 locally (Render image is **3.12**; do not use 3.14)
+- FastAPI + SQLite + OpenAPI
 - Auth: device ID only
 - Requires `ffmpeg` and `ffprobe` on PATH
 
@@ -59,3 +60,18 @@ python -m scripts.clean_reels --reel <reelId>
 ```
 
 To point the existing frontend at this backend, stop the Node server on port 4100, start this app on 4100, then run `npm run dev` in `manifestia-node/frontend`. Vite already proxies `/api` and `/media` to `http://localhost:4100`.
+
+## Deploy on Render
+
+This API is a **Docker** web service on **Python 3.12**. A native Python service defaults to 3.14, cannot install `pydantic-core` (Rust/maturin + read-only Cargo cache), and has no ffmpeg.
+
+1. Push this folder to GitHub. Do **not** commit `.env` or API keys.
+2. On an existing failed service: Settings → Runtime = **Docker** (or delete it and create from `render.yaml`). If the git repo is the whole `vision-reel` workspace, set **Root Directory** to `manifestia-python`.
+3. Confirm the build uses `python:3.12-slim-bookworm`, not `/opt/render/project/src/.venv/bin/python3.14`.
+4. Paste secrets in the dashboard (`BYTEPLUS_API_KEY`, stock keys). Leave `PORT` unset. Disk paths from `render.yaml`:
+   - `DATABASE_PATH=/var/data/manifestia.db`
+   - `STORAGE_ROOT=/var/data/storage`
+5. Persistent disk and an always-on instance (Standard / 1 GB recommended) are required: SQLite and generated MP4s live on disk, and in-process reel jobs die if the instance sleeps.
+6. After deploy: `https://<service>.onrender.com/health` and `/api-docs`. `PUBLIC_API_URL` is filled from `RENDER_EXTERNAL_URL` when unset or localhost.
+
+`runtime.txt` (`python-3.12.10`) is only a fallback if someone recreates a native Python service. Docker is the real deploy path.

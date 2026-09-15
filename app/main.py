@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
@@ -99,12 +100,19 @@ async def unhandled_exception_handler(_request: Request, exc: Exception):
 
 @app.get("/health", tags=["Health"])
 async def health():
-    return {
-        "status": "ok",
+    ffmpeg_ok = shutil.which("ffmpeg") is not None
+    ffprobe_ok = shutil.which("ffprobe") is not None
+    payload = {
+        "status": "ok" if ffmpeg_ok and ffprobe_ok else "unhealthy",
         "byteplusApiKey": "set" if config.byteplus_api_key else "missing",
         "byteplusVideoModel": config.byteplus_video_model,
         "publicApiUrl": config.public_api_url,
+        "ffmpeg": "ok" if ffmpeg_ok else "missing",
+        "ffprobe": "ok" if ffprobe_ok else "missing",
     }
+    if not ffmpeg_ok or not ffprobe_ok:
+        return JSONResponse(status_code=503, content=payload)
+    return payload
 
 
 @app.get("/api-docs", include_in_schema=False)

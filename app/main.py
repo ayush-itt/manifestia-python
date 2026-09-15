@@ -20,13 +20,27 @@ from app.routes.reels import router as reels_router
 from app.storage.paths import ensure_storage_root
 
 
+def log_seedance_readiness() -> None:
+    key_status = "set" if config.byteplus_api_key else "MISSING"
+    print("[readiness] Seedance pipeline check:", flush=True)
+    print(f"  BYTEPLUS_API_KEY: {key_status}", flush=True)
+    print(f"  BYTEPLUS_VIDEO_MODEL: {config.byteplus_video_model}", flush=True)
+    print(f"  BYTEPLUS_API_URL: {config.byteplus_api_url}", flush=True)
+    print(f"  PUBLIC_API_URL: {config.public_api_url}", flush=True)
+    if not config.byteplus_api_key:
+        print("  Status: INCOMPLETE — BYTEPLUS_API_KEY missing (restart after editing .env)", flush=True)
+    else:
+        print("  Status: READY for Seedance video generation", flush=True)
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     await get_db()
     await ensure_storage_root()
-    print(f"Manifestia Python backend ready on http://localhost:{config.port}")
-    print(f"Swagger UI: http://localhost:{config.port}/api-docs")
-    print(f"Content dir: {config.content_dir}")
+    print(f"Manifestia Python backend ready on http://localhost:{config.port}", flush=True)
+    print(f"Swagger UI: http://localhost:{config.port}/api-docs", flush=True)
+    print(f"Content dir: {config.content_dir}", flush=True)
+    log_seedance_readiness()
     yield
     await close_db()
 
@@ -85,7 +99,12 @@ async def unhandled_exception_handler(_request: Request, exc: Exception):
 
 @app.get("/health", tags=["Health"])
 async def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "byteplusApiKey": "set" if config.byteplus_api_key else "missing",
+        "byteplusVideoModel": config.byteplus_video_model,
+        "publicApiUrl": config.public_api_url,
+    }
 
 
 @app.get("/api-docs", include_in_schema=False)

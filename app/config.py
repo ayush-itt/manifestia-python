@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_BYTEPLUS_VIDEO_MODEL = "dreamina-seedance-2-0-260128"
@@ -10,6 +12,12 @@ DEFAULT_MODELARK_BASE_URL = "https://ark.ap-southeast.bytepluses.com/api/v3"
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
 POC_ROOT = BACKEND_ROOT
 CONTENT_DIR = BACKEND_ROOT / "content"
+
+load_dotenv(BACKEND_ROOT / ".env", override=True)
+
+
+def byteplus_api_key() -> str:
+    return (os.environ.get("BYTEPLUS_API_KEY") or "").strip()
 
 MEDIA_URL_PREFIX = "/media"
 MUSIC_URL_PREFIX = "/media/library-music"
@@ -40,6 +48,7 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
         case_sensitive=False,
+        env_ignore_empty=True,
     )
 
     port: int = 4100
@@ -109,7 +118,6 @@ class Config:
     unsplash_access_key: str = _raw.unsplash_access_key
     coverr_api_key: str = _raw.coverr_api_key
     nasa_api_key: str = _raw.nasa_api_key
-    byteplus_api_key: str = _raw.byteplus_api_key
     byteplus_api_url: str = _raw.byteplus_api_url.strip() or DEFAULT_MODELARK_BASE_URL
     byteplus_video_model: str = _raw.byteplus_video_model.strip() or DEFAULT_BYTEPLUS_VIDEO_MODEL
     public_api_url: str = _raw.public_api_url.strip() or "http://localhost:4100"
@@ -128,6 +136,10 @@ class Config:
     default_edge_voice: str = _raw.tts_voice.strip() or "en-US-AriaNeural"
     poc_root: Path = POC_ROOT
     backend_root: Path = BACKEND_ROOT
+
+    @property
+    def byteplus_api_key(self) -> str:
+        return byteplus_api_key()
 
 
 config = Config()

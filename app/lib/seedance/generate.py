@@ -5,7 +5,7 @@ from typing import Any
 
 import httpx
 
-from app.config import config
+from app.config import byteplus_api_key, config
 from app.lib.seedance.modelark_client import (
     DEFAULT_MODELARK_BASE_URL,
     ModelArkClient,
@@ -30,7 +30,7 @@ def _assert_file_exists(path: Path, label: str) -> None:
 
 
 async def generate_seedance_video(input: dict[str, Any]) -> dict[str, Any]:
-    api_key = config.byteplus_api_key
+    api_key = byteplus_api_key()
     if not api_key:
         raise RuntimeError("BYTEPLUS_API_KEY not set")
 

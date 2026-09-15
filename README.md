@@ -33,6 +33,10 @@ copy .env.example .env
 uvicorn app.main:app --reload --port 4100
 ```
 
+Put `BYTEPLUS_API_KEY` in `.env` before generating an AI video reel. **`.env` changes are not picked up by `--reload`** — stop uvicorn completely (Ctrl+C) and start it again. Startup logs print `BYTEPLUS_API_KEY: set | MISSING`; `/health` also reports `byteplusApiKey`.
+
+A reel that already failed with `BYTEPLUS_API_KEY not set` keeps that error in SQLite until you regenerate or start a new session.
+
 - Health: http://localhost:4100/health
 - Swagger: http://localhost:4100/api-docs
 - OpenAPI: http://localhost:4100/openapi.json

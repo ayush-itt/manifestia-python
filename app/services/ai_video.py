@@ -4,7 +4,7 @@ import json
 import uuid
 from pathlib import Path
 
-from app.config import config
+from app.config import byteplus_api_key, config
 from app.db.connection import now_iso
 from app.db.models import insert_scene, set_scene_status, update_reel
 from app.lib.seedance.generate import generate_seedance_video
@@ -15,7 +15,7 @@ from app.storage.paths import ensure_reel_dirs, scene_video_path
 
 
 async def generate_ai_video_reel(session_id: str, reel_id: str) -> None:
-    if not config.byteplus_api_key:
+    if not byteplus_api_key():
         raise RuntimeError("BYTEPLUS_API_KEY not set")
 
     story = await load_story_template()

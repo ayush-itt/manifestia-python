@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__
+**/__pycache__
+*.py[cod]
+.env
+.env.*
+!.env.example
+storage
+*.db
+.DS_Store
+deploy/oracle
+*.md
+!README.md

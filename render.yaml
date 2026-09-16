@@ -1,0 +1,38 @@
+# Render Blueprint — Free web service
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: manifestia-api
+    runtime: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    # Free tier: no persistent disk — SQLite/MP4s reset on sleep/redeploy
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /app/storage/manifestia.db
+      - key: STORAGE_ROOT
+        value: /app/storage
+      # Set this AFTER first deploy to https://<your-service>.onrender.com
+      - key: PUBLIC_API_URL
+        sync: false
+      - key: BYTEPLUS_API_KEY
+        sync: false
+      - key: BYTEPLUS_API_URL
+        value: https://ark.ap-southeast.bytepluses.com/api/v3
+      - key: BYTEPLUS_VIDEO_MODEL
+        value: dreamina-seedance-2-0-260128
+      - key: PEXELS_API_KEY
+        sync: false
+      - key: PIXABAY_API_KEY
+        sync: false
+      - key: UNSPLASH_ACCESS_KEY
+        sync: false
+      - key: COVERR_API_KEY
+        sync: false
+      - key: NASA_API_KEY
+        sync: false

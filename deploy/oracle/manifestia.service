@@ -1,0 +1,20 @@
+[Unit]
+Description=Manifestia FastAPI backend
+After=network.target
+
+[Service]
+Type=simple
+User=opc
+Group=opc
+WorkingDirectory=/opt/manifestia
+Environment=PATH=/opt/manifestia/.venv/bin:/usr/local/bin:/usr/bin
+EnvironmentFile=/opt/manifestia/.env
+ExecStart=/opt/manifestia/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 4100 --workers 1
+Restart=always
+RestartSec=5
+# Video jobs need time and memory
+TimeoutStopSec=30
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

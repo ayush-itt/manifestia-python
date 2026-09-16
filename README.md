@@ -59,3 +59,11 @@ python -m scripts.clean_reels --reel <reelId>
 ```
 
 To point the existing frontend at this backend, stop the Node server on port 4100, start this app on 4100, then run `npm run dev` in `manifestia-node/frontend`. Vite already proxies `/api` and `/media` to `http://localhost:4100`.
+
+## Deploy (Render Free — recommended for no credit card)
+
+Public HTTPS API for the mobile app: [deploy/render/README.md](deploy/render/README.md)
+
+Uses the root `Dockerfile` + `render.yaml`. Free tier sleeps after 15 minutes idle; the URL stays the same.
+
+Optional always-on VM (requires card for signup): [deploy/oracle/README.md](deploy/oracle/README.md).

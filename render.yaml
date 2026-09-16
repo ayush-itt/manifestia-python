@@ -36,3 +36,5 @@ services:
         sync: false
       - key: NASA_API_KEY
         sync: false
+      - key: MANIFESTIA_API_KEY
+        sync: false

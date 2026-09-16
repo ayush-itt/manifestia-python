@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from app.config import MEDIA_URL_PREFIX, MUSIC_URL_PREFIX, config
 from app.db.connection import close_db, get_db
 from app.lib.music.catalog import get_music_root
+from app.middleware.api_key import ApiKeyMiddleware
 from app.routes.auth import router as auth_router
 from app.routes.library import router as library_router
 from app.routes.media import router as media_router
@@ -27,6 +28,8 @@ def log_seedance_readiness() -> None:
     print(f"  BYTEPLUS_VIDEO_MODEL: {config.byteplus_video_model}", flush=True)
     print(f"  BYTEPLUS_API_URL: {config.byteplus_api_url}", flush=True)
     print(f"  PUBLIC_API_URL: {config.public_api_url}", flush=True)
+    api_auth = "set" if config.manifestia_api_key else "MISSING"
+    print(f"  MANIFESTIA_API_KEY: {api_auth}", flush=True)
     if not config.byteplus_api_key:
         print("  Status: INCOMPLETE — BYTEPLUS_API_KEY missing (restart after editing .env)", flush=True)
     else:
@@ -48,13 +51,18 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(
     title="Manifestia Python POC",
     version="1.0.0",
-    description="Dual-pipeline reel generation: AI video + stock images/videos.",
+    description=(
+        "Dual-pipeline reel generation: AI video + stock images/videos. "
+        "Protected routes under `/api/*` require header `X-API-Key` "
+        "(or `Authorization: Bearer <MANIFESTIA_API_KEY>`)."
+    ),
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
     lifespan=lifespan,
 )
 
+app.add_middleware(ApiKeyMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -62,6 +70,30 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    from fastapi.openapi.utils import get_openapi
+
+    schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    schema.setdefault("components", {}).setdefault("securitySchemes", {})["ApiKeyAuth"] = {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+    }
+    schema["security"] = [{"ApiKeyAuth": []}]
+    app.openapi_schema = schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 
 @app.exception_handler(RequestValidationError)
@@ -104,6 +136,7 @@ async def health():
         "byteplusApiKey": "set" if config.byteplus_api_key else "missing",
         "byteplusVideoModel": config.byteplus_video_model,
         "publicApiUrl": config.public_api_url,
+        "apiAuth": "required" if config.manifestia_api_key else "disabled",
     }
 
 

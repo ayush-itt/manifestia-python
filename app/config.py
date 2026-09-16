@@ -78,6 +78,8 @@ class Settings(BaseSettings):
     scene_duration_sec: float = 10
     narration_delay_sec: float = 2
     tts_voice: str = "en-US-AriaNeural"
+    # Shared secret for mobile / clients. Prefer env MANIFESTIA_API_KEY.
+    manifestia_api_key: str = ""
 
     def resolved_database_path(self) -> Path:
         if self.database_path.strip():
@@ -136,10 +138,20 @@ class Config:
     default_edge_voice: str = _raw.tts_voice.strip() or "en-US-AriaNeural"
     poc_root: Path = POC_ROOT
     backend_root: Path = BACKEND_ROOT
+    node_env: str = _raw.node_env
 
     @property
     def byteplus_api_key(self) -> str:
         return byteplus_api_key()
+
+    @property
+    def manifestia_api_key(self) -> str:
+        # Allow either name; prefer MANIFESTIA_API_KEY.
+        return (
+            (_raw.manifestia_api_key or "").strip()
+            or (os.environ.get("MANIFESTIA_API_KEY") or "").strip()
+            or (os.environ.get("API_KEY") or "").strip()
+        )
 
 
 config = Config()

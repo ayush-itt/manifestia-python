@@ -50,6 +50,9 @@ async def generate_ai_video_reel(session_id: str, reel_id: str) -> None:
 
     import asyncio
 
+    # Free-tier hosts choke if every Seedance scene runs in parallel (health checks → 502).
+    scene_sem = asyncio.Semaphore(1)
+
     async def generate_one(i: int) -> None:
         scene = story["scenes"][i]
         scene_id = scene_ids[i]
@@ -57,18 +60,19 @@ async def generate_ai_video_reel(session_id: str, reel_id: str) -> None:
         await set_scene_status(scene_id, "generating")
         output_path = scene_video_path(session_id, reel_id, scene_id)
         try:
-            await generate_seedance_video(
-                {
-                    "visualPrompt": scene["prompt"],
-                    "referenceImagePaths": [ref["absolutePath"] for ref in refs],
-                    "durationSec": scene.get("duration") or config.scene_duration_sec,
-                    "ratio": story.get("ratio") or config.video_ratio,
-                    "resolution": "720p",
-                    "generateAudio": True,
-                    "outputPath": str(output_path),
-                    "sceneId": scene_id,
-                }
-            )
+            async with scene_sem:
+                await generate_seedance_video(
+                    {
+                        "visualPrompt": scene["prompt"],
+                        "referenceImagePaths": [ref["absolutePath"] for ref in refs],
+                        "durationSec": scene.get("duration") or config.scene_duration_sec,
+                        "ratio": story.get("ratio") or config.video_ratio,
+                        "resolution": "720p",
+                        "generateAudio": True,
+                        "outputPath": str(output_path),
+                        "sceneId": scene_id,
+                    }
+                )
             if not output_path.exists():
                 raise RuntimeError(f"Seedance output missing: {output_path}")
             await set_scene_status(scene_id, "ready", {"media_path": str(output_path), "media_type": "ai_video"})

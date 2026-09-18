@@ -76,8 +76,15 @@ def personalized_and_generic_stills(scene: StoryScene) -> list[dict[str, Any]]:
 def validate_local_reel_assets(scenes: list[StoryScene], mode: StockReelMode) -> None:
     for scene in scenes:
         if mode == "mixed" and (scene.get("localVideo") or "").strip():
-            resolve_local_video_path(scene)
-            continue
+            try:
+                resolve_local_video_path(scene)
+                continue
+            except RuntimeError as err:
+                logger.warning(
+                    "mixed scene %s local AI clip unavailable (%s); static stills required",
+                    scene["sceneId"],
+                    err,
+                )
         personalized_and_generic_stills(scene)
 
 
@@ -194,7 +201,20 @@ async def produce_scene_clip(
     out_path = scene_video_path(session_id, reel_id, scene_id)
     silent_path = f"{out_path}.silent.mp4"
     if mode == "mixed" and (scene.get("localVideo") or "").strip():
-        return await bake_local_video(scene, silent_path, str(out_path), duration_sec)
+        try:
+            return await bake_local_video(scene, silent_path, str(out_path), duration_sec)
+        except Exception as err:
+            logger.warning(
+                "mixed scene %s local AI clip failed: %s; using static stills",
+                scene["sceneId"],
+                err,
+            )
+            processed = await bake_two_local_stills(scene, silent_path, str(out_path), duration_sec)
+            return {
+                "path": processed["path"],
+                "mediaType": processed["mediaType"],
+                "source": f"fallback:{processed['source']}",
+            }
     return await bake_two_local_stills(scene, silent_path, str(out_path), duration_sec)
 
 

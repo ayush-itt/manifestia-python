@@ -76,6 +76,8 @@ class StoryScene(TypedDict):
     stockQuery: str
     voiceover: str
     referenceImages: list[StoryReferenceImage]
+    localVideo: NotRequired[str]
+    personalizedStill: NotRequired[str]
 
 
 class StoryTemplate(TypedDict):

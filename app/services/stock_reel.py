@@ -3,63 +3,82 @@ from __future__ import annotations
 import json
 import logging
 import uuid
+from pathlib import Path
 from typing import Any
 
 from app.config import config
 from app.db.connection import now_iso
 from app.db.models import insert_scene, set_scene_status, update_reel
+from app.lib.ffmpeg.assembly import ffmpeg_path, run_ffmpeg
 from app.lib.ffmpeg.kenburns import add_silent_audio, normalize_stock_video_clip, render_kenburns_clip
-from app.lib.stock.search import download_stock_candidate, search_stock
 from app.services.music import pick_background_music
 from app.services.narration import finish_reel_with_affirmations
-from app.services.story import load_story_template, resolve_reference_paths, stock_query_for_scene
-from app.storage.paths import ensure_reel_dirs, scene_video_path, stock_dest_dir
-from app.types import StockCandidate, StockReelMode, StoryScene
+from app.services.story import load_story_template, resolve_local_video_path, resolve_reference_paths, stock_query_for_scene
+from app.storage.paths import ensure_reel_dirs, scene_video_path
+from app.types import StockReelMode, StoryScene
 
 logger = logging.getLogger(__name__)
 
-MOTION_WORDS = [
-    "water", "ocean", "city", "walk", "walking", "sky", "wave", "waves",
-    "cloud", "clouds", "rain", "river", "traffic", "crowd", "dance",
-    "sunrise", "sunset", "wind", "sea", "beach", "street", "night",
-    "aerial", "drone", "flow", "moving", "light", "coast", "forest",
-    "skyline", "rooftop",
-]
+PERSONALIZED_STILL_ROLE = "personalized_still"
+STYLE_REFERENCE_ROLE = "style_reference"
+STILLS_PER_SCENE = 2
+STILL_SEGMENT_SEC = 5.0
+FORBIDDEN_PERSONALIZED_FILES = frozenset({"subject_reference.jpg"})
 
 
-def pick_fallback_image(refs: list[dict[str, Any]]) -> str | None:
-    preferred = next((r for r in reversed(refs) if r.get("role") != "subject_identity"), None)
-    if preferred:
-        return preferred.get("absolutePath")
-    if refs:
-        return refs[-1].get("absolutePath") or refs[0].get("absolutePath")
-    return None
+def _file_basename(rel: str) -> str:
+    return Path(rel).name.lower()
 
 
-def motion_score(text: str) -> int:
-    lowered = text.lower()
-    return sum(1 for word in MOTION_WORDS if word in lowered)
+def style_reference_images(refs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [r for r in refs if (r.get("role") or "") == STYLE_REFERENCE_ROLE]
 
 
-def video_slot_indices(scenes: list[StoryScene]) -> set[int]:
-    n = len(scenes)
-    if n < 2:
-        return set()
-    target = min(max(round(n * 0.33), 1), n // 2)
-    picked: list[int] = []
-    for k in range(target):
-        pos = int(((k + 0.5) * n) / target)
-        remaining = [i for i in range(n) if i not in picked]
+def resolve_personalized_still(scene: StoryScene) -> dict[str, Any]:
+    rel = (scene.get("personalizedStill") or "").strip()
+    if not rel:
+        raise RuntimeError(
+            f"Scene {scene['sceneId']} ({scene['title']}) is missing personalizedStill. "
+            "Do not substitute subject_identity, customer_identity, or family_member_identity."
+        )
+    if _file_basename(rel) in FORBIDDEN_PERSONALIZED_FILES:
+        raise RuntimeError(
+            f"Scene {scene['sceneId']} cannot use {rel} as a personalized still. "
+            "subject_reference.jpg is an identity sheet, not a photoreal founder still."
+        )
+    path = (config.story_assets_dir / rel).resolve()
+    if not path.is_file():
+        raise RuntimeError(f"Scene {scene['sceneId']} personalized still missing on disk: {rel}")
+    return {"file": rel, "role": PERSONALIZED_STILL_ROLE, "absolutePath": str(path)}
 
-        def sort_key(idx: int) -> tuple[int, int, int]:
-            consec = 1 if any(abs(idx - p) == 1 for p in picked) else 0
-            dist = abs(idx - pos)
-            score = motion_score(f"{scenes[idx]['voiceover']} {scenes[idx]['title']}")
-            return (consec, dist, -score)
 
-        remaining.sort(key=sort_key)
-        picked.append(remaining[0])
-    return set(picked)
+def resolve_generic_style_still(scene: StoryScene) -> dict[str, Any]:
+    refs = resolve_reference_paths(scene.get("referenceImages") or [])
+    styles = style_reference_images(refs)
+    if not styles:
+        raise RuntimeError(
+            f"Scene {scene['sceneId']} ({scene['title']}) has no style_reference still. "
+            "customer_identity, family_member_identity, and subject_identity cannot be used as generic."
+        )
+    chosen = styles[0]
+    path = chosen.get("absolutePath")
+    if not path or not Path(str(path)).is_file():
+        raise RuntimeError(
+            f"Scene {scene['sceneId']} generic style still missing on disk: {chosen.get('file') or path}"
+        )
+    return chosen
+
+
+def personalized_and_generic_stills(scene: StoryScene) -> list[dict[str, Any]]:
+    return [resolve_personalized_still(scene), resolve_generic_style_still(scene)]
+
+
+def validate_local_reel_assets(scenes: list[StoryScene], mode: StockReelMode) -> None:
+    for scene in scenes:
+        if mode == "mixed" and (scene.get("localVideo") or "").strip():
+            resolve_local_video_path(scene)
+            continue
+        personalized_and_generic_stills(scene)
 
 
 async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockReelMode = "mixed") -> None:
@@ -67,11 +86,10 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
     await ensure_reel_dirs(session_id, reel_id)
     await update_reel(reel_id, {"status": "generating", "started_at": now_iso(), "progress": 5})
     logger.info("stock reel start reel=%s session=%s mode=%s scenes=%s", reel_id, session_id, mode, len(story["scenes"]))
+    validate_local_reel_assets(story["scenes"], mode)
 
     scene_ids: list[str] = []
     video_paths: list[str] = [""] * len(story["scenes"])
-    video_slots = video_slot_indices(story["scenes"]) if mode == "mixed" else set()
-    used_keys: set[str] = set()
 
     for scene in story["scenes"]:
         scene_id = str(uuid.uuid4())
@@ -99,22 +117,18 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
 
     for i, scene in enumerate(story["scenes"]):
         scene_id = scene_ids[i]
-        query = stock_query_for_scene(story, scene["sceneId"], scene["title"])
+        duration_sec = scene.get("duration") or config.scene_duration_sec
         await set_scene_status(scene_id, "generating")
-        logger.info("stock scene start reel=%s scene=%s query=%s video=%s", reel_id, scene_id, query, i in video_slots)
+        logger.info("stock scene start reel=%s scene=%s index=%s mode=%s", reel_id, scene_id, scene["sceneId"], mode)
         try:
             processed = await produce_scene_clip(
                 session_id=session_id,
                 reel_id=reel_id,
                 scene_id=scene_id,
-                scene_index=scene["sceneId"],
-                query=query,
-                want_video=i in video_slots,
-                used_keys=used_keys,
-                fallback_image=pick_fallback_image(resolve_reference_paths(scene.get("referenceImages") or [])),
-                duration_sec=scene.get("duration") or config.scene_duration_sec,
+                scene=scene,
+                mode=mode,
+                duration_sec=duration_sec,
             )
-            used_keys.add(processed["source"])
             await set_scene_status(
                 scene_id,
                 "ready",
@@ -125,7 +139,13 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
                 },
             )
             video_paths[i] = processed["path"]
-            logger.info("stock scene ready reel=%s scene=%s type=%s source=%s", reel_id, scene_id, processed["mediaType"], processed["source"])
+            logger.info(
+                "stock scene ready reel=%s scene=%s type=%s source=%s",
+                reel_id,
+                scene_id,
+                processed["mediaType"],
+                processed["source"],
+            )
             await update_reel(reel_id, {"progress": 10 + round(((i + 1) / len(story["scenes"])) * 50)})
         except Exception as err:
             msg = str(err).strip() or type(err).__name__
@@ -167,137 +187,91 @@ async def produce_scene_clip(
     session_id: str,
     reel_id: str,
     scene_id: str,
-    scene_index: int,
-    query: str,
-    want_video: bool,
-    used_keys: set[str],
-    fallback_image: str | None,
+    scene: StoryScene,
+    mode: StockReelMode,
     duration_sec: float,
 ) -> dict[str, str]:
-    dest_dir = stock_dest_dir(session_id, reel_id, scene_id)
     out_path = scene_video_path(session_id, reel_id, scene_id)
     silent_path = f"{out_path}.silent.mp4"
+    if mode == "mixed" and (scene.get("localVideo") or "").strip():
+        return await bake_local_video(scene, silent_path, str(out_path), duration_sec)
+    return await bake_two_local_stills(scene, silent_path, str(out_path), duration_sec)
 
-    if want_video:
-        clip = await try_stock_video(query, dest_dir, silent_path, str(out_path), duration_sec, used_keys)
-        if clip:
-            return clip
-        logger.info("stock scene %s video slot fell back to still", scene_id)
 
-    try:
-        candidates = await search_stock(
-            {
-                "query": query,
-                "kind": "image",
-                "perPage": 8,
-                "orientation": "portrait",
-                "sources": ["pexels", "pixabay", "unsplash"],
-            }
-        )
-        images = [
-            c
-            for c in candidates
-            if not c["previewOnly"] and c["kind"] == "image" and f"{c['source']}:{c['sourceId']}" not in used_keys
-        ]
-        for picked in images:
-            try:
-                return await bake_still(picked, dest_dir, silent_path, str(out_path), duration_sec, scene_index)
-            except Exception as err:
-                logger.warning("stock scene %s image %s failed: %s", scene_id, picked["id"], err)
-    except Exception as err:
-        logger.warning("stock scene %s image search failed: %s", scene_id, err)
-
-    if not fallback_image:
-        raise RuntimeError(f"No stock media found for query: {query}")
-    await render_kenburns_clip(
-        image_path=fallback_image,
+async def bake_local_video(scene: StoryScene, silent_path: str, out_path: str, duration_sec: float) -> dict[str, str]:
+    source = resolve_local_video_path(scene)
+    await normalize_stock_video_clip(
+        input_path=source,
         output_path=silent_path,
         width=config.video_width,
         height=config.video_height,
         duration_sec=duration_sec,
         fps=config.video_fps,
-        animation="ken-burns",
-        scene_index=scene_index,
     )
     await add_silent_audio(silent_path, out_path, duration_sec)
-    return {"path": str(out_path), "mediaType": "stock_image", "source": f"fallback:{fallback_image}"}
+    rel = (scene.get("localVideo") or "").strip()
+    return {"path": out_path, "mediaType": "ai_video", "source": f"local:{rel}"}
 
 
-async def try_stock_video(
-    query: str,
-    dest_dir,
+async def bake_two_local_stills(
+    scene: StoryScene,
     silent_path: str,
     out_path: str,
     duration_sec: float,
-    used_keys: set[str],
-) -> dict[str, str] | None:
-    try:
-        candidates = await search_stock(
-            {
-                "query": query,
-                "kind": "video",
-                "videoFirst": True,
-                "perPage": 8,
-                "orientation": "portrait",
-                "sources": ["pixabay", "coverr", "pexels"],
-            }
-        )
-        ordered = [
-            c
-            for c in rank_video_candidates(candidates)
-            if not c["previewOnly"] and f"{c['source']}:{c['sourceId']}" not in used_keys
-        ]
-        for picked in ordered:
-            try:
-                downloaded = await download_stock_candidate(picked, dest_dir)
-                await normalize_stock_video_clip(
-                    input_path=downloaded["path"],
-                    output_path=silent_path,
-                    width=config.video_width,
-                    height=config.video_height,
-                    duration_sec=duration_sec,
-                    fps=config.video_fps,
-                )
-                await add_silent_audio(silent_path, out_path, duration_sec)
-                return {
-                    "path": out_path,
-                    "mediaType": "stock_video",
-                    "source": f"{picked['source']}:{picked['sourceId']}",
-                }
-            except Exception as err:
-                logger.warning("stock video %s failed: %s", picked["id"], err)
-    except Exception as err:
-        logger.warning("stock video search failed: %s", err)
-    return None
-
-
-def rank_video_candidates(candidates: list[StockCandidate]) -> list[StockCandidate]:
-    videos = [c for c in candidates if c["kind"] == "video"]
-    return [c for c in videos if c["source"] != "pexels"] + [c for c in videos if c["source"] == "pexels"]
-
-
-async def bake_still(
-    picked: StockCandidate,
-    dest_dir,
-    silent_path: str,
-    out_path: str,
-    duration_sec: float,
-    scene_index: int,
 ) -> dict[str, str]:
-    downloaded = await download_stock_candidate(picked, dest_dir)
-    await render_kenburns_clip(
-        image_path=downloaded["path"],
-        output_path=silent_path,
-        width=config.video_width,
-        height=config.video_height,
-        duration_sec=duration_sec,
-        fps=config.video_fps,
-        animation="ken-burns",
-        scene_index=scene_index,
-    )
+    images = personalized_and_generic_stills(scene)
+    segment = duration_sec / STILLS_PER_SCENE if duration_sec else STILL_SEGMENT_SEC
+    dest = Path(silent_path)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    segments: list[str] = []
+    for i, image in enumerate(images):
+        image_path = image.get("absolutePath")
+        if not image_path or not Path(image_path).is_file():
+            raise RuntimeError(
+                f"Scene {scene['sceneId']} still missing on disk: {image.get('file') or image_path}"
+            )
+        segment_path = f"{silent_path}.still-{i}.mp4"
+        await render_kenburns_clip(
+            image_path=image_path,
+            output_path=segment_path,
+            width=config.video_width,
+            height=config.video_height,
+            duration_sec=segment,
+            fps=config.video_fps,
+            animation="ken-burns",
+            scene_index=scene["sceneId"] + i,
+        )
+        segments.append(segment_path)
+    await concat_silent_clips(segments, silent_path)
     await add_silent_audio(silent_path, out_path, duration_sec)
-    return {
-        "path": out_path,
-        "mediaType": "stock_image",
-        "source": f"{picked['source']}:{picked['sourceId']}",
-    }
+    joined = "+".join(str(image.get("file") or image.get("absolutePath")) for image in images)
+    return {"path": out_path, "mediaType": "stock_image", "source": f"local:{joined}"}
+
+
+async def concat_silent_clips(clips: list[str], output_path: str) -> None:
+    if not clips:
+        raise RuntimeError("No still clips to concatenate")
+    dest = Path(output_path)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    list_path = Path(f"{output_path}.list.txt")
+    list_content = "\n".join(
+        f"file '{ffmpeg_path(p).replace(chr(39), chr(39) + chr(92) + chr(39) + chr(39))}'" for p in clips
+    )
+    list_path.write_text(list_content, encoding="utf-8")
+    await run_ffmpeg(
+        [
+            "-y",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            str(list_path),
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-an",
+            str(dest),
+        ]
+    )

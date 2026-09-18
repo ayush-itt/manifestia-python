@@ -1,11 +1,40 @@
 from __future__ import annotations
 
 import asyncio
+import subprocess
+import sys
 from pathlib import Path
 from typing import Callable
 
 from app.config import config
 from app.types import ReelRatio
+
+
+def _popen_kwargs() -> dict[str, int]:
+    if sys.platform == "win32":
+        return {"creationflags": subprocess.CREATE_NO_WINDOW}
+    return {}
+
+
+def _run_exec(
+    cmd: str,
+    args: list[str],
+    *,
+    stdin_bytes: bytes | None = None,
+    stdin_devnull: bool = True,
+) -> subprocess.CompletedProcess[bytes]:
+    kwargs: dict = {
+        "args": [cmd, *args],
+        "stdout": subprocess.PIPE,
+        "stderr": subprocess.PIPE,
+        "check": False,
+        **_popen_kwargs(),
+    }
+    if stdin_bytes is not None:
+        kwargs["input"] = stdin_bytes
+    elif stdin_devnull:
+        kwargs["stdin"] = subprocess.DEVNULL
+    return subprocess.run(**kwargs)
 
 
 def dimensions_for_ratio(ratio: ReelRatio) -> dict[str, int]:
@@ -15,32 +44,19 @@ def dimensions_for_ratio(ratio: ReelRatio) -> dict[str, int]:
 
 
 async def run_command(cmd: str, args: list[str]) -> tuple[str, str]:
-    proc = await asyncio.create_subprocess_exec(
-        cmd,
-        *args,
-        stdin=asyncio.subprocess.DEVNULL,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout_b, stderr_b = await proc.communicate()
-    stdout = stdout_b.decode("utf-8", errors="replace")
-    stderr = stderr_b.decode("utf-8", errors="replace")
+    # Threaded subprocess: Windows uvicorn uses SelectorEventLoop, which cannot spawn children.
+    proc = await asyncio.to_thread(_run_exec, cmd, args)
+    stdout = proc.stdout.decode("utf-8", errors="replace")
+    stderr = proc.stderr.decode("utf-8", errors="replace")
     if proc.returncode != 0:
         raise RuntimeError(f"{cmd} exited {proc.returncode}: {stderr[-800:]}")
     return stdout, stderr
 
 
 async def run_ffmpeg(args: list[str]) -> None:
-    proc = await asyncio.create_subprocess_exec(
-        "ffmpeg",
-        *args,
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    _stdout, stderr_b = await proc.communicate()
-    stderr = stderr_b.decode("utf-8", errors="replace")
+    proc = await asyncio.to_thread(_run_exec, "ffmpeg", args)
     if proc.returncode != 0:
+        stderr = proc.stderr.decode("utf-8", errors="replace")
         raise RuntimeError(f"ffmpeg exited {proc.returncode}: {stderr[-800:]}")
 
 

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import asyncio
+import subprocess
 from pathlib import Path
 
 import numpy as np
+
+from app.lib.ffmpeg.assembly import _popen_kwargs, _run_exec
 
 KENBURNS_DURATION_S = 12
 KENBURNS_ZOOM = 0.12
@@ -49,8 +52,7 @@ def remap_kenburns_frame(src: np.ndarray, width: int, height: int, eased: float,
 
 async def decode_image_rgb24(image_path: str | Path, width: int, height: int) -> bytes:
     expected = width * height * 3
-    proc = await asyncio.create_subprocess_exec(
-        "ffmpeg",
+    args = [
         "-v",
         "error",
         "-i",
@@ -64,16 +66,74 @@ async def decode_image_rgb24(image_path: str | Path, width: int, height: int) ->
         "-frames:v",
         "1",
         "pipe:1",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-        stdin=asyncio.subprocess.DEVNULL,
-    )
-    stdout, stderr = await proc.communicate()
+    ]
+    proc = await asyncio.to_thread(_run_exec, "ffmpeg", args)
     if proc.returncode != 0:
-        raise RuntimeError(f"ffmpeg decode exited {proc.returncode}: {stderr.decode('utf-8', errors='replace')[-800:]}")
-    if len(stdout) != expected:
-        raise RuntimeError(f"Ken Burns still decode size mismatch: got {len(stdout)}, expected {expected}")
-    return stdout
+        raise RuntimeError(
+            f"ffmpeg decode exited {proc.returncode}: {proc.stderr.decode('utf-8', errors='replace')[-800:]}"
+        )
+    if len(proc.stdout) != expected:
+        raise RuntimeError(f"Ken Burns still decode size mismatch: got {len(proc.stdout)}, expected {expected}")
+    return proc.stdout
+
+
+def _encode_rgb24_kenburns_sync(
+    src: bytes,
+    output_path: str,
+    width: int,
+    height: int,
+    fps: int,
+    frames: int,
+    sign: int,
+) -> None:
+    proc = subprocess.Popen(
+        [
+            "ffmpeg",
+            "-y",
+            "-f",
+            "rawvideo",
+            "-pix_fmt",
+            "rgb24",
+            "-s",
+            f"{width}x{height}",
+            "-r",
+            str(fps),
+            "-i",
+            "pipe:0",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "veryfast",
+            "-crf",
+            "18",
+            "-pix_fmt",
+            "yuv420p",
+            "-frames:v",
+            str(frames),
+            "-an",
+            "-movflags",
+            "+faststart",
+            output_path,
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        **_popen_kwargs(),
+    )
+    assert proc.stdin is not None
+    src_arr = np.frombuffer(src, dtype=np.uint8).copy()
+    try:
+        for n in range(frames):
+            frame = remap_kenburns_frame(src_arr, width, height, kenburns_eased(n, fps), sign)
+            proc.stdin.write(frame.tobytes())
+        proc.stdin.close()
+    except Exception:
+        proc.kill()
+        raise
+    stderr = proc.stderr.read() if proc.stderr else b""
+    rc = proc.wait()
+    if rc != 0:
+        raise RuntimeError(f"ffmpeg kenburns exited {rc}: {stderr.decode('utf-8', errors='replace')[-800:]}")
 
 
 async def encode_rgb24_kenburns(
@@ -85,49 +145,13 @@ async def encode_rgb24_kenburns(
     frames: int,
     sign: int,
 ) -> None:
-    proc = await asyncio.create_subprocess_exec(
-        "ffmpeg",
-        "-y",
-        "-f",
-        "rawvideo",
-        "-pix_fmt",
-        "rgb24",
-        "-s",
-        f"{width}x{height}",
-        "-r",
-        str(fps),
-        "-i",
-        "pipe:0",
-        "-c:v",
-        "libx264",
-        "-preset",
-        "veryfast",
-        "-crf",
-        "18",
-        "-pix_fmt",
-        "yuv420p",
-        "-frames:v",
-        str(frames),
-        "-an",
-        "-movflags",
-        "+faststart",
+    await asyncio.to_thread(
+        _encode_rgb24_kenburns_sync,
+        src,
         str(output_path),
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.DEVNULL,
-        stderr=asyncio.subprocess.PIPE,
+        width,
+        height,
+        fps,
+        frames,
+        sign,
     )
-    assert proc.stdin is not None
-    src_arr = np.frombuffer(src, dtype=np.uint8).copy()
-    try:
-        for n in range(frames):
-            frame = remap_kenburns_frame(src_arr, width, height, kenburns_eased(n, fps), sign)
-            proc.stdin.write(frame.tobytes())
-            await proc.stdin.drain()
-        proc.stdin.close()
-    except Exception:
-        proc.kill()
-        raise
-    stderr = await proc.stderr.read() if proc.stderr else b""
-    await proc.wait()
-    if proc.returncode != 0:
-        raise RuntimeError(f"ffmpeg kenburns exited {proc.returncode}: {stderr.decode('utf-8', errors='replace')[-800:]}")

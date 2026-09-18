@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import edge_tts
@@ -7,6 +8,8 @@ import edge_tts
 from app.config import config
 from app.lib.onboarding_catalog import edge_voice_from_catalog
 from app.lib.tts.edge_ws import synthesize_edge_ws
+
+logger = logging.getLogger(__name__)
 
 
 def edge_voice_for(voice_id: str | None) -> str:
@@ -29,6 +32,6 @@ async def synthesize_affirmation(text: str, voice_id: str | None, output_path: s
         await communicate.save(str(dest))
         return {"audioPath": str(dest), "voice": voice}
     except Exception as err:
-        print(f"[tts] edge-tts failed ({err}); falling back to Edge WebSocket")
+        logger.warning("edge-tts failed (%s); falling back to Edge WebSocket", err)
         await synthesize_edge_ws(cleaned, voice, dest)
         return {"audioPath": str(dest), "voice": voice}

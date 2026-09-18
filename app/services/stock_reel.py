@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import uuid
 from typing import Any
 
@@ -14,6 +15,8 @@ from app.services.narration import finish_reel_with_affirmations
 from app.services.story import load_story_template, resolve_reference_paths, stock_query_for_scene
 from app.storage.paths import ensure_reel_dirs, scene_video_path, stock_dest_dir
 from app.types import StockCandidate, StockReelMode, StoryScene
+
+logger = logging.getLogger(__name__)
 
 MOTION_WORDS = [
     "water", "ocean", "city", "walk", "walking", "sky", "wave", "waves",
@@ -63,6 +66,7 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
     story = await load_story_template()
     await ensure_reel_dirs(session_id, reel_id)
     await update_reel(reel_id, {"status": "generating", "started_at": now_iso(), "progress": 5})
+    logger.info("stock reel start reel=%s session=%s mode=%s scenes=%s", reel_id, session_id, mode, len(story["scenes"]))
 
     scene_ids: list[str] = []
     video_paths: list[str] = [""] * len(story["scenes"])
@@ -97,6 +101,7 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
         scene_id = scene_ids[i]
         query = stock_query_for_scene(story, scene["sceneId"], scene["title"])
         await set_scene_status(scene_id, "generating")
+        logger.info("stock scene start reel=%s scene=%s query=%s video=%s", reel_id, scene_id, query, i in video_slots)
         try:
             processed = await produce_scene_clip(
                 session_id=session_id,
@@ -120,9 +125,11 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
                 },
             )
             video_paths[i] = processed["path"]
+            logger.info("stock scene ready reel=%s scene=%s type=%s source=%s", reel_id, scene_id, processed["mediaType"], processed["source"])
             await update_reel(reel_id, {"progress": 10 + round(((i + 1) / len(story["scenes"])) * 50)})
         except Exception as err:
-            msg = str(err) if str(err) else "Stock scene failed"
+            msg = str(err).strip() or type(err).__name__
+            logger.error("stock scene failed reel=%s scene=%s: %s", reel_id, scene_id, msg)
             await set_scene_status(scene_id, "failed", {"error_message": msg})
             raise
 
@@ -153,6 +160,7 @@ async def generate_stock_media_reel(session_id: str, reel_id: str, mode: StockRe
             "error_message": None,
         },
     )
+    logger.info("stock reel complete reel=%s mode=%s output=%s", reel_id, mode, finished["outputPath"])
 
 
 async def produce_scene_clip(
@@ -174,7 +182,7 @@ async def produce_scene_clip(
         clip = await try_stock_video(query, dest_dir, silent_path, str(out_path), duration_sec, used_keys)
         if clip:
             return clip
-        print(f"[stock scene {scene_id}] video slot fell back to still")
+        logger.info("stock scene %s video slot fell back to still", scene_id)
 
     try:
         candidates = await search_stock(
@@ -195,9 +203,9 @@ async def produce_scene_clip(
             try:
                 return await bake_still(picked, dest_dir, silent_path, str(out_path), duration_sec, scene_index)
             except Exception as err:
-                print(f"[stock scene {scene_id}] image {picked['id']} failed:", err)
+                logger.warning("stock scene %s image %s failed: %s", scene_id, picked["id"], err)
     except Exception as err:
-        print(f"[stock scene {scene_id}] image search failed:", err)
+        logger.warning("stock scene %s image search failed: %s", scene_id, err)
 
     if not fallback_image:
         raise RuntimeError(f"No stock media found for query: {query}")
@@ -257,9 +265,9 @@ async def try_stock_video(
                     "source": f"{picked['source']}:{picked['sourceId']}",
                 }
             except Exception as err:
-                print(f"[stock video] {picked['id']} failed:", err)
+                logger.warning("stock video %s failed: %s", picked["id"], err)
     except Exception as err:
-        print("[stock video] search failed:", err)
+        logger.warning("stock video search failed: %s", err)
     return None
 
 

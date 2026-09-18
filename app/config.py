@@ -65,6 +65,8 @@ class Settings(BaseSettings):
     byteplus_api_url: str = DEFAULT_MODELARK_BASE_URL
     byteplus_video_model: str = DEFAULT_BYTEPLUS_VIDEO_MODEL
     public_api_url: str = "http://localhost:4100"
+    ssl_certfile: str = ""
+    ssl_keyfile: str = ""
     story_path: str = ""
     story_templates_dir: str = ""
     story_assets_dir: str = ""
@@ -80,6 +82,7 @@ class Settings(BaseSettings):
     tts_voice: str = "en-US-AriaNeural"
     # Shared secret for mobile / clients. Prefer env MANIFESTIA_API_KEY.
     manifestia_api_key: str = ""
+    log_level: str = "INFO"
 
     def resolved_database_path(self) -> Path:
         if self.database_path.strip():
@@ -123,6 +126,8 @@ class Config:
     byteplus_api_url: str = _raw.byteplus_api_url.strip() or DEFAULT_MODELARK_BASE_URL
     byteplus_video_model: str = _raw.byteplus_video_model.strip() or DEFAULT_BYTEPLUS_VIDEO_MODEL
     public_api_url: str = _raw.public_api_url.strip() or "http://localhost:4100"
+    ssl_certfile: str = _raw.ssl_certfile.strip()
+    ssl_keyfile: str = _raw.ssl_keyfile.strip()
     content_dir: Path = CONTENT_DIR
     story_path: Path = _raw.resolved_story_path()
     story_assets_dir: Path = _raw.resolved_story_assets_dir()
@@ -139,6 +144,7 @@ class Config:
     poc_root: Path = POC_ROOT
     backend_root: Path = BACKEND_ROOT
     node_env: str = _raw.node_env
+    log_level: str = (_raw.log_level or "INFO").strip().upper() or "INFO"
 
     @property
     def byteplus_api_key(self) -> str:
@@ -152,6 +158,30 @@ class Config:
             or (os.environ.get("MANIFESTIA_API_KEY") or "").strip()
             or (os.environ.get("API_KEY") or "").strip()
         )
+
+    def resolved_ssl_files(self) -> tuple[Path, Path] | None:
+        cert = self.ssl_certfile
+        key = self.ssl_keyfile
+        if not cert and not key:
+            return None
+        if not cert or not key:
+            raise ValueError("Set both SSL_CERTFILE and SSL_KEYFILE, or neither.")
+        cert_path = Path(cert).expanduser()
+        key_path = Path(key).expanduser()
+        if not cert_path.is_absolute():
+            cert_path = (BACKEND_ROOT / cert_path).resolve()
+        else:
+            cert_path = cert_path.resolve()
+        if not key_path.is_absolute():
+            key_path = (BACKEND_ROOT / key_path).resolve()
+        else:
+            key_path = key_path.resolve()
+        if not cert_path.is_file() or not key_path.is_file():
+            raise FileNotFoundError(
+                f"SSL files not found. cert={cert_path} key={key_path}. "
+                "Run: python -m scripts.gen_dev_ssl"
+            )
+        return cert_path, key_path
 
 
 config = Config()

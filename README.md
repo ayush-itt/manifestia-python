@@ -33,6 +33,35 @@ copy .env.example .env
 uvicorn app.main:app --reload --port 4100
 ```
 
+LAN HTTPS (self-signed). Other devices on the network cannot use `https://` against a plain HTTP uvicorn process — TLS has to be enabled on the server:
+
+```bash
+pip install cryptography
+python -m scripts.gen_dev_ssl --ip 172.30.0.1
+```
+
+Set in `.env`:
+
+```
+SSL_CERTFILE=./certs/dev-cert.pem
+SSL_KEYFILE=./certs/dev-key.pem
+PUBLIC_API_URL=https://172.30.0.1:4100
+```
+
+Then:
+
+```bash
+python run.py
+```
+
+or:
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 4100 --ssl-certfile certs/dev-cert.pem --ssl-keyfile certs/dev-key.pem
+```
+
+Open `https://172.30.0.1:4100/health` and accept the browser warning (self-signed). Phones must install/trust `certs/dev-cert.pem` or they will refuse the connection.
+
 Put `BYTEPLUS_API_KEY` in `.env` before generating an AI video reel. **`.env` changes are not picked up by `--reload`** — stop uvicorn completely (Ctrl+C) and start it again. Startup logs print `BYTEPLUS_API_KEY: set | MISSING`; `/health` also reports `byteplusApiKey`.
 
 A reel that already failed with `BYTEPLUS_API_KEY not set` keeps that error in SQLite until you regenerate or start a new session.

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
@@ -12,7 +13,9 @@ from fastapi.staticfiles import StaticFiles
 from app.config import MEDIA_URL_PREFIX, MUSIC_URL_PREFIX, config
 from app.db.connection import close_db, get_db
 from app.lib.music.catalog import get_music_root
+from app.logging_setup import setup_logging
 from app.middleware.api_key import ApiKeyMiddleware
+from app.middleware.request_log import RequestLogMiddleware
 from app.routes.auth import router as auth_router
 from app.routes.library import router as library_router
 from app.routes.media import router as media_router
@@ -20,29 +23,33 @@ from app.routes.onboarding import router as onboarding_router
 from app.routes.reels import router as reels_router
 from app.storage.paths import ensure_storage_root
 
+logger = logging.getLogger(__name__)
+
 
 def log_seedance_readiness() -> None:
     key_status = "set" if config.byteplus_api_key else "MISSING"
-    print("[readiness] Seedance pipeline check:", flush=True)
-    print(f"  BYTEPLUS_API_KEY: {key_status}", flush=True)
-    print(f"  BYTEPLUS_VIDEO_MODEL: {config.byteplus_video_model}", flush=True)
-    print(f"  BYTEPLUS_API_URL: {config.byteplus_api_url}", flush=True)
-    print(f"  PUBLIC_API_URL: {config.public_api_url}", flush=True)
     api_auth = "set" if config.manifestia_api_key else "MISSING"
-    print(f"  MANIFESTIA_API_KEY: {api_auth}", flush=True)
+    logger.info("Seedance pipeline check")
+    logger.info("  BYTEPLUS_API_KEY: %s", key_status)
+    logger.info("  BYTEPLUS_VIDEO_MODEL: %s", config.byteplus_video_model)
+    logger.info("  BYTEPLUS_API_URL: %s", config.byteplus_api_url)
+    logger.info("  PUBLIC_API_URL: %s", config.public_api_url)
+    logger.info("  MANIFESTIA_API_KEY: %s", api_auth)
     if not config.byteplus_api_key:
-        print("  Status: INCOMPLETE — BYTEPLUS_API_KEY missing (restart after editing .env)", flush=True)
+        logger.warning("  Status: INCOMPLETE — BYTEPLUS_API_KEY missing (restart after editing .env)")
     else:
-        print("  Status: READY for Seedance video generation", flush=True)
+        logger.info("  Status: READY for Seedance video generation")
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    setup_logging(config.log_level)
     await get_db()
     await ensure_storage_root()
-    print(f"Manifestia Python backend ready on http://localhost:{config.port}", flush=True)
-    print(f"Swagger UI: http://localhost:{config.port}/api-docs", flush=True)
-    print(f"Content dir: {config.content_dir}", flush=True)
+    scheme = "https" if config.ssl_certfile and config.ssl_keyfile else "http"
+    logger.info("Manifestia Python backend ready on %s://0.0.0.0:%s", scheme, config.port)
+    logger.info("Swagger UI: %s://localhost:%s/api-docs", scheme, config.port)
+    logger.info("Content dir: %s", config.content_dir)
     log_seedance_readiness()
     yield
     await close_db()
@@ -70,6 +77,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(RequestLogMiddleware)
 
 
 def custom_openapi():
@@ -97,7 +105,7 @@ app.openapi = custom_openapi
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_handler(_request: Request, exc: RequestValidationError):
+async def validation_handler(request: Request, exc: RequestValidationError):
     field_errors: dict[str, list[str]] = {}
     form_errors: list[str] = []
     for error in exc.errors():
@@ -108,6 +116,7 @@ async def validation_handler(_request: Request, exc: RequestValidationError):
         else:
             key = str(loc[-1])
             field_errors.setdefault(key, []).append(msg)
+    logger.warning("validation failed %s %s form=%s fields=%s", request.method, request.url.path, form_errors, field_errors)
     return JSONResponse(
         status_code=400,
         content={"error": "Validation failed", "details": {"formErrors": form_errors, "fieldErrors": field_errors}},
@@ -115,17 +124,18 @@ async def validation_handler(_request: Request, exc: RequestValidationError):
 
 
 @app.exception_handler(HTTPException)
-async def http_exception_handler(_request: Request, exc: HTTPException):
+async def http_exception_handler(request: Request, exc: HTTPException):
+    logger.warning("%s %s -> %s %s", request.method, request.url.path, exc.status_code, exc.detail)
     if isinstance(exc.detail, dict):
         return JSONResponse(status_code=exc.status_code, content=exc.detail)
     return JSONResponse(status_code=exc.status_code, content={"error": str(exc.detail)})
 
 
 @app.exception_handler(Exception)
-async def unhandled_exception_handler(_request: Request, exc: Exception):
+async def unhandled_exception_handler(request: Request, exc: Exception):
     if isinstance(exc, (HTTPException, RequestValidationError)):
         raise exc
-    print(exc)
+    logger.exception("unhandled error %s %s", request.method, request.url.path)
     return JSONResponse(status_code=500, content={"error": str(exc) if str(exc) else "Internal server error"})
 
 

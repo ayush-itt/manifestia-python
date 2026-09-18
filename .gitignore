@@ -8,3 +8,4 @@ __pycache__/
 /storage/
 .pytest_cache/
 .mypy_cache/
+certs/*.pem

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
@@ -16,6 +17,8 @@ from app.db.models import (
 from app.mappers import map_reel, map_session
 from app.schemas.api import OnboardingSubmit
 from app.services.orchestrator import start_both_reels
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/onboarding", tags=["Onboarding"])
 UNUSED_IN_POC = {"identity_statement", "limiting_belief"}
@@ -34,6 +37,16 @@ async def submit(body: OnboardingSubmit):
     await upsert_device(body.deviceId)
     session = await create_session(body.deviceId, body.answers)
     ids = await start_both_reels(session["session_id"])
+    variants = body.answers.get("reel_variants") if isinstance(body.answers, dict) else None
+    logger.info(
+        "submit device=%s session=%s variants=%s ai=%s mixed=%s images=%s",
+        body.deviceId,
+        session["session_id"],
+        variants,
+        ids.get("aiReelId"),
+        ids.get("stockReelId"),
+        ids.get("imagesReelId"),
+    )
     return {
         "session": map_session(session),
         "reelIds": {"ai": ids.get("aiReelId"), "stock": ids.get("stockReelId"), "images": ids.get("imagesReelId")},

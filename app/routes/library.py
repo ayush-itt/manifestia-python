@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
 from app.db.models import list_library_reels, list_scenes_for_reel
 from app.mappers import map_reel
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/library", tags=["Library"])
 
@@ -42,4 +45,5 @@ async def list_library(
                 "previewUrl": preview,
             }
         )
+    logger.info("list device=%s type=%s status=%s count=%s", ident, type, status, len(items))
     return {"count": len(items), "items": items}

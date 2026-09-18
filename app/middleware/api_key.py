@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import secrets
 
 from fastapi import Request
@@ -7,6 +8,8 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import config
+
+logger = logging.getLogger(__name__)
 
 # Always public (Render health checks + optional docs discovery).
 PUBLIC_EXACT = {"/health"}
@@ -59,6 +62,7 @@ class ApiKeyMiddleware(BaseHTTPMiddleware):
             or len(provided) != len(expected)
             or not secrets.compare_digest(provided, expected)
         ):
+            logger.warning("Unauthorized path=%s", path)
             return JSONResponse(
                 status_code=401,
                 content={"error": "Unauthorized", "hint": "Send X-API-Key or Authorization: Bearer <MANIFESTIA_API_KEY>"},

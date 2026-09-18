@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import httpx
 
 from app.types import StockCandidate
+
+logger = logging.getLogger(__name__)
 
 BROWSER_UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -55,12 +58,12 @@ async def download_url_to_file(
                                 raise RuntimeError(f"clip too large: {written} bytes")
                             handle.write(chunk)
             if insecure:
-                print(f"[stock download] saved with TLS verify off: {url[:120]}")
+                logger.warning("saved with TLS verify off: %s", url[:120])
             return str(dest)
         except Exception as err:
             last_error = err
             kind = "insecure" if insecure else "secure"
-            print(f"[stock download] {kind} failed:", err)
+            logger.warning("%s download failed: %s", kind, err)
     raise last_error if last_error else RuntimeError(f"Download failed for {url}")
 
 

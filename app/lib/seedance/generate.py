@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,8 @@ from app.lib.seedance.modelark_client import (
 )
 from app.lib.seedance.seedance_duration import assert_seedance_duration
 from app.lib.seedance.seedance_media_url import resolve_image_url_for_seedance, resolve_video_url_for_seedance
+
+logger = logging.getLogger(__name__)
 
 
 async def _download_video(url: str, output_path: Path) -> None:
@@ -59,9 +62,14 @@ async def generate_seedance_video(input: dict[str, Any]) -> dict[str, Any]:
         url = await resolve_video_url_for_seedance(video_path, public_base_url)
         content.append({"type": "video_url", "role": "reference_video", "video_url": {"url": url}})
 
-    print(
-        f"[seedance] Creating task scene={scene_id} model={model_id} duration={seedance_duration}s "
-        f"ratio={ratio} images={len(image_paths)} videos={len(video_paths)}"
+    logger.info(
+        "creating task scene=%s model=%s duration=%ss ratio=%s images=%s videos=%s",
+        scene_id,
+        model_id,
+        seedance_duration,
+        ratio,
+        len(image_paths),
+        len(video_paths),
     )
 
     try:
@@ -78,7 +86,7 @@ async def generate_seedance_video(input: dict[str, Any]) -> dict[str, Any]:
 
         def on_update(t: dict[str, Any]) -> None:
             if t.get("status") in ("running", "queued"):
-                print(f"[seedance] task {task.get('id')} status={t.get('status')}")
+                logger.info("task %s status=%s", task.get("id"), t.get("status"))
 
         final_task = await client.poll_task(task["id"], interval_ms=3500, on_update=on_update)
         if final_task.get("status") != "succeeded":
@@ -88,9 +96,9 @@ async def generate_seedance_video(input: dict[str, Any]) -> dict[str, Any]:
         if not video_url:
             raise RuntimeError("Seedance task succeeded but no video URL returned")
         await _download_video(video_url, output_path)
-        print(f"[seedance] Video ready scene={scene_id} task={task.get('id')}")
+        logger.info("video ready scene=%s task=%s", scene_id, task.get("id"))
         return {"videoPath": str(output_path), "provider": "seedance", "taskId": task["id"]}
     except Exception as err:
         msg = str(err)
-        print(f"[seedance] failed scene={scene_id}:", msg)
+        logger.error("failed scene=%s: %s", scene_id, msg)
         raise

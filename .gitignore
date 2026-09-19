@@ -9,3 +9,6 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 certs/*.pem
+# Leftover ffmpeg/normalize copies at the repo root, not story content
+/*.norm-*.mp4
+/final_720p.mp4*

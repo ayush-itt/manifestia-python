@@ -4,6 +4,8 @@ import json
 import re
 from typing import Any
 
+from pathlib import Path
+
 from app.config import config
 from app.types import ReelRatio, StoryReferenceImage, StoryScene, StoryTemplate
 
@@ -38,6 +40,9 @@ async def load_story_template() -> StoryTemplate:
                 "stockQuery": (scene.get("stockQuery") or "").strip(),
                 "voiceover": extract_voiceover(scene),
                 "referenceImages": scene.get("referenceImages") or [],
+                "localVideo": (scene.get("localVideo") or "").strip(),
+                "personalizedStill": (scene.get("personalizedStill") or "").strip(),
+                "generalizedStill": (scene.get("generalizedStill") or "").strip(),
             }
         )
     return {
@@ -58,6 +63,16 @@ def resolve_reference_paths(images: list[StoryReferenceImage]) -> list[dict[str,
         item["absolutePath"] = str(config.story_assets_dir / img["file"])
         out.append(item)
     return out
+
+
+def resolve_local_video_path(scene: StoryScene) -> Path:
+    rel = (scene.get("localVideo") or "").strip()
+    if not rel:
+        raise RuntimeError(f"Scene {scene['sceneId']} has no localVideo path")
+    path = (config.story_assets_dir / rel).resolve()
+    if not path.is_file():
+        raise RuntimeError(f"Local AI video not found for scene {scene['sceneId']}: {rel}")
+    return path
 
 
 def stock_query_for_scene(story: StoryTemplate, scene_id: int, fallback_title: str) -> str:

@@ -107,6 +107,41 @@ def ffmpeg_path(path: str | Path) -> str:
     return str(path).replace("\\", "/")
 
 
+def _parse_frame_rate(raw: str) -> float:
+    value = raw.strip()
+    if "/" in value:
+        num, den = value.split("/", 1)
+        divisor = float(den)
+        return float(num) / divisor if divisor else 0.0
+    return float(value)
+
+
+async def probe_video_geometry(video_path: str | Path) -> tuple[int, int, float]:
+    stdout, _ = await run_command(
+        "ffprobe",
+        [
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height,avg_frame_rate",
+            "-of",
+            "csv=p=0",
+            str(video_path),
+        ],
+    )
+    parts = [p.strip() for p in stdout.strip().split(",") if p.strip()]
+    if len(parts) < 3:
+        raise RuntimeError(f"Could not probe geometry for {video_path}")
+    return int(float(parts[0])), int(float(parts[1])), _parse_frame_rate(parts[2])
+
+
+def matches_reel_geometry(width: int, height: int, fps: float, ratio: ReelRatio) -> bool:
+    dims = dimensions_for_ratio(ratio)
+    return width == dims["width"] and height == dims["height"] and abs(fps - config.video_fps) < 0.05
+
+
 async def normalize_scene_video(input_path: str | Path, output_path: str | Path, ratio: ReelRatio) -> None:
     dest = Path(output_path)
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -158,10 +193,18 @@ async def assemble_reel(
     normalized_paths: list[str] = []
     durations: list[float] = []
     for i, video in enumerate(videos):
-        normalized = f"{dest}.norm-{i}.mp4"
-        await normalize_scene_video(video, normalized, ratio)
-        normalized_paths.append(normalized)
-        durations.append(await probe_video_duration_sec(normalized))
+        try:
+            width, height, fps = await probe_video_geometry(video)
+            already_ok = matches_reel_geometry(width, height, fps, ratio)
+        except Exception:
+            already_ok = False
+        if already_ok:
+            chosen = video
+        else:
+            chosen = f"{dest}.norm-{i}.mp4"
+            await normalize_scene_video(video, chosen, ratio)
+        normalized_paths.append(chosen)
+        durations.append(await probe_video_duration_sec(chosen))
         if on_progress:
             on_progress(10 + round(((i + 1) / len(videos)) * 50))
     list_path = Path(f"{dest}.list.txt")
@@ -176,16 +219,8 @@ async def assemble_reel(
             "0",
             "-i",
             str(list_path),
-            "-c:v",
-            "libx264",
-            "-pix_fmt",
-            "yuv420p",
-            "-c:a",
-            "aac",
-            "-ar",
-            "48000",
-            "-ac",
-            "2",
+            "-c",
+            "copy",
             str(dest),
         ]
     )

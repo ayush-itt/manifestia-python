@@ -42,6 +42,7 @@ async def load_story_template() -> StoryTemplate:
                 "referenceImages": scene.get("referenceImages") or [],
                 "localVideo": (scene.get("localVideo") or "").strip(),
                 "personalizedStill": (scene.get("personalizedStill") or "").strip(),
+                "generalizedStill": (scene.get("generalizedStill") or "").strip(),
             }
         )
     return {

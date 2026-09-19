@@ -78,6 +78,7 @@ class StoryScene(TypedDict):
     referenceImages: list[StoryReferenceImage]
     localVideo: NotRequired[str]
     personalizedStill: NotRequired[str]
+    generalizedStill: NotRequired[str]
 
 
 class StoryTemplate(TypedDict):

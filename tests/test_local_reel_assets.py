@@ -43,12 +43,15 @@ class LocalReelAssetTests(unittest.IsolatedAsyncioTestCase):
         for scene_id in (2, 3, 4, 5, 6):
             self.assertFalse((self.by_id[scene_id].get("localVideo") or "").strip())
 
-    def test_each_scene_pairs_personalized_founder_with_first_style(self) -> None:
+    def test_each_scene_pairs_personalized_with_generalized(self) -> None:
         for scene_id, (personalized, generic) in EXPECTED_PAIRS.items():
-            picked = personalized_and_generic_stills(self.by_id[scene_id])
+            scene = self.by_id[scene_id]
+            self.assertEqual(scene.get("personalizedStill"), personalized)
+            self.assertEqual(scene.get("generalizedStill"), generic)
+            picked = personalized_and_generic_stills(scene)
             self.assertEqual([item["file"] for item in picked], [personalized, generic])
             self.assertEqual(picked[0]["role"], "personalized_still")
-            self.assertEqual(picked[1]["role"], "style_reference")
+            self.assertEqual(picked[1]["role"], "generalized_still")
             self.assertNotIn("subject_reference.jpg", [item["file"] for item in picked])
             self.assertNotIn("customer_reference.png", [item["file"] for item in picked])
             self.assertNotIn("family_reference.png", [item["file"] for item in picked])
@@ -71,6 +74,13 @@ class LocalReelAssetTests(unittest.IsolatedAsyncioTestCase):
             resolve_personalized_still(scene)
         self.assertIn("subject_reference.jpg", str(ctx.exception))
 
+    def test_generalized_still_rejects_subject_reference(self) -> None:
+        scene = dict(self.by_id[1])
+        scene["generalizedStill"] = "images/subject_reference.jpg"
+        with self.assertRaises(RuntimeError) as ctx:
+            personalized_and_generic_stills(scene)
+        self.assertIn("subject_reference.jpg", str(ctx.exception))
+
     def test_personalized_still_hard_fails_when_unmapped(self) -> None:
         scene = dict(self.by_id[3])
         scene["personalizedStill"] = ""
@@ -87,12 +97,26 @@ class LocalReelAssetTests(unittest.IsolatedAsyncioTestCase):
         ]
         self.assertEqual([item["file"] for item in style_reference_images(refs)], ["style.jpg"])
 
-    def test_generic_hard_fails_when_style_file_missing(self) -> None:
+    def test_generalized_still_hard_fails_when_file_missing(self) -> None:
         scene = dict(self.by_id[2])
-        scene["referenceImages"] = [{"file": "images/does-not-exist.jpg", "role": "style_reference", "promptLabel": "x"}]
+        scene["generalizedStill"] = "images/does-not-exist.jpg"
         with self.assertRaises(RuntimeError) as ctx:
             personalized_and_generic_stills(scene)
         self.assertIn("missing on disk", str(ctx.exception))
+
+    def test_generalized_still_hard_fails_when_unmapped(self) -> None:
+        scene = dict(self.by_id[3])
+        scene["generalizedStill"] = ""
+        with self.assertRaises(RuntimeError) as ctx:
+            personalized_and_generic_stills(scene)
+        self.assertIn("missing generalizedStill", str(ctx.exception))
+
+    def test_stills_hard_fail_when_personalized_and_generalized_are_the_same(self) -> None:
+        scene = dict(self.by_id[2])
+        scene["generalizedStill"] = scene["personalizedStill"]
+        with self.assertRaises(RuntimeError) as ctx:
+            personalized_and_generic_stills(scene)
+        self.assertIn("same file", str(ctx.exception))
 
     def test_stock_reel_does_not_call_seedance_or_stock_search(self) -> None:
         source = inspect.getsource(stock_reel)
@@ -105,10 +129,17 @@ class LocalReelAssetTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("generate_seedance_video", source)
         self.assertIn("referenceImagePaths", source)
         self.assertNotIn("personalizedStill", source)
+        self.assertNotIn("generalizedStill", source)
 
     def test_images_only_preflight_fails_if_a_founder_still_is_missing(self) -> None:
         scenes = [dict(scene) for scene in self.story["scenes"]]
         scenes[0]["personalizedStill"] = "images/founder_scene_missing.jpg"
+        with self.assertRaises(RuntimeError):
+            validate_local_reel_assets(scenes, "images_only")
+
+    def test_images_only_preflight_fails_if_a_generalized_still_is_missing(self) -> None:
+        scenes = [dict(scene) for scene in self.story["scenes"]]
+        scenes[1]["generalizedStill"] = "images/generalized_missing.jpg"
         with self.assertRaises(RuntimeError):
             validate_local_reel_assets(scenes, "images_only")
 

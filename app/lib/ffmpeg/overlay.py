@@ -38,11 +38,12 @@ def ffmpeg_filter_path(path: str | Path) -> str:
 
 async def _write_overlay_png(dest: str | Path, text_file: str | Path, width: int, height: int) -> None:
     font = overlay_font()
-    font_size = 34 if height > width else 40
+    font_size = 38 if height > width else 44
     draw = (
         f"drawtext=fontfile='{font}':textfile='{ffmpeg_filter_path(text_file)}':"
-        f"fontcolor=0xF3E6D4:fontsize={font_size}:line_spacing=10:"
-        "shadowcolor=black@0.65:shadowx=1:shadowy=2:"
+        f"fontcolor=0xFFFFFF:fontsize={font_size}:line_spacing=4:"
+        "borderw=2:bordercolor=black@0.80:"
+        "shadowcolor=black@0.85:shadowx=2:shadowy=3:"
         "x=(w-text_w)/2:y=(h-th-72)"
     )
     await run_ffmpeg(
@@ -63,7 +64,17 @@ async def _write_overlay_png(dest: str | Path, text_file: str | Path, width: int
     )
 
 
-async def burn_affirmation_overlay(video_path: str | Path, output_path: str | Path, text: str, duration_sec: float) -> str:
+async def burn_affirmation_overlay(
+    video_path: str | Path,
+    output_path: str | Path,
+    text: str,
+    duration_sec: float,
+    *,
+    caption_start: float,
+    fade_in_sec: float,
+    fade_out_start: float,
+    fade_out_sec: float,
+) -> str:
     affirmation = wrap_affirmation(text)
     if not affirmation:
         return str(video_path)
@@ -74,13 +85,28 @@ async def burn_affirmation_overlay(video_path: str | Path, output_path: str | Pa
     text_file.write_text(affirmation, encoding="utf-8")
     await _write_overlay_png(png_path, text_file, config.video_width, config.video_height)
 
-    start = config.narration_delay_sec
-    fade_out = max(duration_sec - 0.7, start + 0.5)
     graph = (
-        f"[1:v]format=rgba,fade=t=in:st={start:.2f}:d=0.4:alpha=1,fade=t=out:st={fade_out:.2f}:d=0.5:alpha=1[ov];"
+        f"[1:v]format=rgba,fade=t=in:st={caption_start:.2f}:d={fade_in_sec:.2f}:alpha=1,"
+        f"fade=t=out:st={fade_out_start:.2f}:d={fade_out_sec:.2f}:alpha=1[ov];"
         "[0:v][ov]overlay=0:0:shortest=1[vout]"
     )
-    encode = ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-t", str(duration_sec), str(dest)]
+    encode = [
+        "-c:v",
+        "libx264",
+        "-preset",
+        "veryfast",
+        "-crf",
+        "18",
+        "-pix_fmt",
+        "yuv420p",
+        "-r",
+        str(config.video_fps),
+        "-fps_mode",
+        "cfr",
+        "-t",
+        str(duration_sec),
+        str(dest),
+    ]
     if await has_audio_stream(video_path):
         await run_ffmpeg(
             [

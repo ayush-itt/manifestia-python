@@ -20,10 +20,11 @@ from app.types import StockReelMode, StoryScene
 logger = logging.getLogger(__name__)
 
 PERSONALIZED_STILL_ROLE = "personalized_still"
+GENERALIZED_STILL_ROLE = "generalized_still"
 STYLE_REFERENCE_ROLE = "style_reference"
 STILLS_PER_SCENE = 2
 STILL_SEGMENT_SEC = 5.0
-FORBIDDEN_PERSONALIZED_FILES = frozenset({"subject_reference.jpg"})
+FORBIDDEN_STILL_FILES = frozenset({"subject_reference.jpg"})
 
 
 def _file_basename(rel: str) -> str:
@@ -34,43 +35,41 @@ def style_reference_images(refs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [r for r in refs if (r.get("role") or "") == STYLE_REFERENCE_ROLE]
 
 
-def resolve_personalized_still(scene: StoryScene) -> dict[str, Any]:
-    rel = (scene.get("personalizedStill") or "").strip()
+def _resolve_scene_still(scene: StoryScene, field: str, role: str, label: str) -> dict[str, Any]:
+    rel = (scene.get(field) or "").strip()
     if not rel:
         raise RuntimeError(
-            f"Scene {scene['sceneId']} ({scene['title']}) is missing personalizedStill. "
+            f"Scene {scene['sceneId']} ({scene['title']}) is missing {field}. "
             "Do not substitute subject_identity, customer_identity, or family_member_identity."
         )
-    if _file_basename(rel) in FORBIDDEN_PERSONALIZED_FILES:
+    if _file_basename(rel) in FORBIDDEN_STILL_FILES:
         raise RuntimeError(
-            f"Scene {scene['sceneId']} cannot use {rel} as a personalized still. "
-            "subject_reference.jpg is an identity sheet, not a photoreal founder still."
+            f"Scene {scene['sceneId']} cannot use {rel} as a {label}. "
+            "subject_reference.jpg is an identity sheet, not a photoreal still."
         )
     path = (config.story_assets_dir / rel).resolve()
     if not path.is_file():
-        raise RuntimeError(f"Scene {scene['sceneId']} personalized still missing on disk: {rel}")
-    return {"file": rel, "role": PERSONALIZED_STILL_ROLE, "absolutePath": str(path)}
+        raise RuntimeError(f"Scene {scene['sceneId']} {label} missing on disk: {rel}")
+    return {"file": rel, "role": role, "absolutePath": str(path)}
 
 
-def resolve_generic_style_still(scene: StoryScene) -> dict[str, Any]:
-    refs = resolve_reference_paths(scene.get("referenceImages") or [])
-    styles = style_reference_images(refs)
-    if not styles:
-        raise RuntimeError(
-            f"Scene {scene['sceneId']} ({scene['title']}) has no style_reference still. "
-            "customer_identity, family_member_identity, and subject_identity cannot be used as generic."
-        )
-    chosen = styles[0]
-    path = chosen.get("absolutePath")
-    if not path or not Path(str(path)).is_file():
-        raise RuntimeError(
-            f"Scene {scene['sceneId']} generic style still missing on disk: {chosen.get('file') or path}"
-        )
-    return chosen
+def resolve_personalized_still(scene: StoryScene) -> dict[str, Any]:
+    return _resolve_scene_still(scene, "personalizedStill", PERSONALIZED_STILL_ROLE, "personalized still")
+
+
+def resolve_generalized_still(scene: StoryScene) -> dict[str, Any]:
+    return _resolve_scene_still(scene, "generalizedStill", GENERALIZED_STILL_ROLE, "generalized still")
 
 
 def personalized_and_generic_stills(scene: StoryScene) -> list[dict[str, Any]]:
-    return [resolve_personalized_still(scene), resolve_generic_style_still(scene)]
+    personalized = resolve_personalized_still(scene)
+    generalized = resolve_generalized_still(scene)
+    if Path(str(personalized["absolutePath"])).resolve() == Path(str(generalized["absolutePath"])).resolve():
+        raise RuntimeError(
+            f"Scene {scene['sceneId']} personalizedStill and generalizedStill resolve to the same file: "
+            f"{personalized['file']}"
+        )
+    return [personalized, generalized]
 
 
 def validate_local_reel_assets(scenes: list[StoryScene], mode: StockReelMode) -> None:
@@ -287,11 +286,8 @@ async def concat_silent_clips(clips: list[str], output_path: str) -> None:
             "0",
             "-i",
             str(list_path),
-            "-c:v",
-            "libx264",
-            "-pix_fmt",
-            "yuv420p",
-            "-an",
+            "-c",
+            "copy",
             str(dest),
         ]
     )
